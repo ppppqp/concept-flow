@@ -14,8 +14,8 @@ import ReactFlow, {
 import { useState, useCallback, useMemo, useEffect } from "react";
 import TextNode from "../Node";
 import "reactflow/dist/style.css";
-
-const initialEdges = [];
+import { NodeEvent, NodeEventName } from "../interface";
+import { uuid } from "uuidv4";
 
 const nodeTypes = {
   node: TextNode,
@@ -33,29 +33,55 @@ export default function MindMap() {
       setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
-  const onNodeContentChange = useCallback(
-    (id: string, setContent: (s: string) => void) => {
-      setNodes(nodes =>
-        // @ts-ignore
-        nodes.map((node) => {
-          if (node.id === id) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                content: setContent(node.data.content),
-              },
-            };
-          } else {
-            return node;
-          }
-        })
-      );
+  const onNodeEvents = useCallback(
+    (id: string, params: NodeEvent) => {
+      switch (params.event) {
+        case NodeEventName.UpdateContent: {
+          setNodes((nodes) =>
+            // @ts-ignore
+            nodes.map((node) => {
+              if (node.id === id) {
+                return {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    content: params.params.setContent(node.data.content),
+                  },
+                };
+              } else {
+                return node;
+              }
+            })
+          );
+          break;
+        }
+        case NodeEventName.AddNode: {
+          const newNodeId = uuid();
+          setNodes((nodes) => {
+            const newNodes = [...nodes];
+            newNodes.push({
+              id: newNodeId,
+              type: "node",
+              position: { x: 100, y: 100 },
+              data: { content: "", onEvent: onNodeEvents },
+            });
+            return newNodes;
+          });
+          setEdges((edges) => {
+            const newEdges = [...edges];
+            newEdges.push({
+              id: uuid(),
+              source: id,
+              target: newNodeId,
+            })
+            return newEdges;
+          })
+        }
+      }
     },
     [setNodes]
   );
 
-  
   useEffect(() => {
     // init canvas
     setNodes([
@@ -63,10 +89,10 @@ export default function MindMap() {
         id: "node-1",
         type: "node",
         position: { x: 0, y: 0 },
-        data: { content: "", updateContent: onNodeContentChange },
+        data: { content: "", onEvent: onNodeEvents },
       },
     ]);
-  }, [onNodeContentChange]);
+  }, [onNodeEvents]);
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     []

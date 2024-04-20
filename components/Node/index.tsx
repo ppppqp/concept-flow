@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { Handle, Position } from "reactflow";
 import { readStreamAsString } from "@/utils/stream";
+import { NodeEvent, NodeEventName } from "../interface";
 interface NodeData {
   content: string
-  updateContent: (id: string, setContent: (s: string) => string) => void;
+  onEvent: (id: string, params: NodeEvent) => void;
   addNode: (id: string, query: string) => void;
 }
 const testQuery = `
@@ -16,7 +17,7 @@ Give 4 to 8 concepts.
 `
 
 export default function TextNode({ data, id}: { data: NodeData, id: string }) {
-  const { content, updateContent } = data;
+  const { content, onEvent } = data;
   const makeRegQuery = useCallback(async () => {
 
     const res = await fetch('/api/rag-query', {
@@ -30,7 +31,11 @@ export default function TextNode({ data, id}: { data: NodeData, id: string }) {
     const jsonData = await res.json() as any;
     // updateContent(id, () => jsonData.data);
     // readStreamAsString(res.body as ReadableStream<any>, (c) => updateContent(id, prevMessage => prevMessage + c));
-  }, [id, updateContent])
+  }, [id, onEvent])
+
+  const addNewNode = useCallback(() => {
+    onEvent(id, {event: NodeEventName.AddNode, params: {sourceId: id, query: ''}})
+  }, [onEvent]);
   return (
     <div className="w-32 border rounded bg-white p-1 border-zinc-600 text-xs">
       <div className=" border-zinc-500">
@@ -43,7 +48,7 @@ export default function TextNode({ data, id}: { data: NodeData, id: string }) {
         </button>
         <button
           className="rounded bg-slate-100 p-1 text-xs block"
-          onClick={makeRegQuery}
+          onClick={addNewNode}
         >
           Span
         </button>
