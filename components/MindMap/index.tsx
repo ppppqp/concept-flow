@@ -8,24 +8,12 @@ import ReactFlow, {
   NodeChange,
   EdgeChange,
   Node,
+  Edge,
   Connection,
 } from "reactflow";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import TextNode from "../Node";
 import "reactflow/dist/style.css";
-const initialNodes = [
-  {
-    id: "node-1",
-    type: "node",
-    position: { x: 0, y: 0 },
-    data: { content: '' },
-  },
-  {
-    id: "2",
-    position: { x: 100, y: 100 },
-    data: { label: "World" },
-  },
-];
 
 const initialEdges = [];
 
@@ -33,16 +21,52 @@ const nodeTypes = {
   node: TextNode,
 };
 export default function MindMap() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
   const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nds: Node[]) => applyNodeChanges(changes, nds)),
+    (changes: NodeChange[]) =>
+      setNodes((nds: Node[]) => applyNodeChanges(changes, nds)),
     []
   );
   const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    (changes: EdgeChange[]) =>
+      setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
+  const onNodeContentChange = useCallback(
+    (id: string, setContent: (s: string) => void) => {
+      setNodes(nodes =>
+        // @ts-ignore
+        nodes.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                content: setContent(node.data.content),
+              },
+            };
+          } else {
+            return node;
+          }
+        })
+      );
+    },
+    [setNodes]
+  );
+
+  
+  useEffect(() => {
+    // init canvas
+    setNodes([
+      {
+        id: "node-1",
+        type: "node",
+        position: { x: 0, y: 0 },
+        data: { content: "", updateContent: onNodeContentChange },
+      },
+    ]);
+  }, [onNodeContentChange]);
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     []
