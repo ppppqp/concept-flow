@@ -6,6 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useCallback } from "react";
 import useStore from "../store";
+import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
 // delete node, add node, generate content
 const toolClassName =
@@ -13,6 +14,7 @@ const toolClassName =
 const selector = (state: any) => ({
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
+  removeNode: state.removeNode,
 });
 const querySpan = (concept: string) => `
 I want to be an expert in ${concept}.
@@ -33,7 +35,7 @@ export default function Tool({
   concept: string;
   content: string;
 }) {
-  const { addNode, setNodeContent } = useStore();
+  const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
   const onAddNode = useCallback(() => {
     addNode(id, 'Enter your concept');
   }, [id]);
@@ -50,12 +52,15 @@ export default function Tool({
     await readStreamAsString(stream, (c) => setNodeContent(id, prevMessage => prevMessage + c));
     // setNodeContent(id, prevMessage => prevMessage.replace(/\n/g, "\n"));
   }, [setNodeContent]);
+  const onRemove = useCallback(async () => {
+    removeNode(id);
+  }, [removeNode]);
   return (
     <div className="flex justify-start items-center absolute bottom-0 right-0">
       <div className={toolClassName} onClick={onSpark}>
         <SparklesIcon className="h-3 w-3 text-zinc-600" />
       </div>
-      <div className={toolClassName}>
+      <div className={toolClassName} onClick={onRemove}>
         <TrashIcon className="h-3 w-3 text-zinc-600" />
       </div>
       <div className={toolClassName} onClick={onAddNode}>

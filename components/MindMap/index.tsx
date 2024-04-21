@@ -33,7 +33,7 @@ export default function MindMap() {
         id: "node-1",
         type: "node",
         position: { x: 0, y: 0 },
-        data: { content: "", concept: 'Elasticsearch' },
+        data: { content: "", concept: 'Elasticsearch', degree: 0 },
       },
     ]);
   }, []); 

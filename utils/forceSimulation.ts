@@ -3,13 +3,13 @@ import {Node, Edge} from 'reactflow';
 interface NodeType { x: number; y: number; id: string };
 export function* forceDirectedLayout(nodes: NodeType[], links: { source: string, target: string }[]) {
   // Spring constant for link forces
-  const k = 0.1;
+  const k = 0.3;
 
   // Repulsion constant for node-node forces
-  const repulsion = 4000;
+  const repulsion = 1000;
   // Simulation object using basic forces
   const simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id((d: any) => d.id))
+    .force("link", d3.forceLink(links).id((d: any) => d.id).strength(k))
     .force("charge", d3.forceManyBody().strength(-repulsion))
     .force("collide", d3.forceCollide((d)=>10))
     .force("center", d3.forceCenter(0, 0));

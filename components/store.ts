@@ -77,8 +77,12 @@ const useStore = create<RFState>((set, get) => ({
       id: newNodeId,
       type: "node",
       position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
-      data: { concept },
+      data: { concept, degree: 0 },
     });
+    const sourceNode = newNodes.find(n => n.id === sourceId);
+    if(sourceNode){
+      sourceNode.data.degree += 1;
+    }
     const newEdges = [...edges];
     newEdges.push({
       id: uuid(),
@@ -91,7 +95,20 @@ const useStore = create<RFState>((set, get) => ({
     })
     await get().updateLoop(newNodes, newEdges);
   },
+  removeNode: async(targetId: string) => {
+    const nodes = get().nodes;
+    const newNodes = [...nodes];
+    const toRemove = newNodes.findIndex(n => n.id === targetId);
+    newNodes.splice(toRemove, 1);
 
+    const edges = get().edges;
+    const newEdges = edges.filter((e)=>e.target !== targetId && e.source !== targetId);
+
+    set({
+      nodes: newNodes,
+      edges: newEdges
+    });
+  },
   updateLoop: async (newNodes: Node[], newEdges: Edge[]) => {
     let startTime = performance.now(); // Track start time for interval calculation
     const generator = updateNodeLayout(newNodes, newEdges);
