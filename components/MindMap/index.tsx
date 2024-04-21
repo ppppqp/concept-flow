@@ -11,75 +11,46 @@ import ReactFlow, {
   Edge,
   Connection,
 } from "reactflow";
+import { useShallow } from 'zustand/react/shallow';
 import { useState, useCallback, useMemo, useEffect } from "react";
 import TextNode from "../Node";
 import "reactflow/dist/style.css";
-import { NodeEvent, NodeEventName } from "../interface";
-import { uuid } from "uuidv4";
-
+import { useNodeEvents } from "@/hooks/useNodeEvents";
+import {forceDirectedLayout} from '@/utils';
+import useStore from '@/components/store';
 const nodeTypes = {
   node: TextNode,
 };
+
+const selector = (state: any) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+  setNodes: state.setNodes,
+});
+
 export default function MindMap() {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) =>
-      setNodes((nds: Node[]) => applyNodeChanges(changes, nds)),
-    []
-  );
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  );
-  const onNodeEvents = useCallback(
-    (id: string, params: NodeEvent) => {
-      switch (params.event) {
-        case NodeEventName.UpdateContent: {
-          setNodes((nodes) =>
-            // @ts-ignore
-            nodes.map((node) => {
-              if (node.id === id) {
-                return {
-                  ...node,
-                  data: {
-                    ...node.data,
-                    content: params.params.setContent(node.data.content),
-                  },
-                };
-              } else {
-                return node;
-              }
-            })
-          );
-          break;
-        }
-        case NodeEventName.AddNode: {
-          const newNodeId = uuid();
-          setNodes((nodes) => {
-            const newNodes = [...nodes];
-            newNodes.push({
-              id: newNodeId,
-              type: "node",
-              position: { x: 100, y: 100 },
-              data: { content: "", onEvent: onNodeEvents },
-            });
-            return newNodes;
-          });
-          setEdges((edges) => {
-            const newEdges = [...edges];
-            newEdges.push({
-              id: uuid(),
-              source: id,
-              target: newNodeId,
-            })
-            return newEdges;
-          })
-        }
-      }
-    },
-    [setNodes]
+  useEffect(()=>{
+    const nodes = [
+      { id: '1', x: 100, y: 50 },
+      { id: '2', x: 200, y: 100 },
+      { id: '3', x: 50, y: 150 },
+    ];
+    
+    const links = [
+      { source: '1', target: '2' },
+      { source: '2', target: '3' },
+    ];
+    
+    console.log(forceDirectedLayout(nodes, links));
+  }, []);
+  
+
+
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } = useStore(
+    useShallow(selector),
   );
 
   useEffect(() => {
@@ -89,14 +60,11 @@ export default function MindMap() {
         id: "node-1",
         type: "node",
         position: { x: 0, y: 0 },
-        data: { content: "", onEvent: onNodeEvents },
+        data: { content: "", onEvent: () => {} },
       },
     ]);
-  }, [onNodeEvents]);
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
+  }, []); 
+
   return (
     <div style={{ height: "98vh" }} className="text-sm">
       <ReactFlow

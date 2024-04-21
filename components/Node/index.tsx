@@ -2,10 +2,10 @@ import { useCallback } from "react";
 import { Handle, Position } from "reactflow";
 import { readStreamAsString } from "@/utils/stream";
 import { NodeEvent, NodeEventName } from "../interface";
+import { useShallow } from "zustand/react/shallow";
+import useStore from "../store";
 interface NodeData {
   content: string
-  onEvent: (id: string, params: NodeEvent) => void;
-  addNode: (id: string, query: string) => void;
 }
 const testQuery = `
 I want to be an expert in Elasticsearch. Please try your best to organize your answer into the following format:
@@ -15,9 +15,16 @@ AAA|BBB|CCC
 "AAA" should be replaced by a key concept of Elasticsearch that is important and worth diving into. Just the concept itself is enough.
 Give 4 to 8 concepts.
 `
+const selector = (state: any) => ({
+  setNodeContent: state.setNodeContent,
+  addNode: state.addNode,
+});
 
 export default function TextNode({ data, id}: { data: NodeData, id: string }) {
-  const { content, onEvent } = data;
+  const { content } = data;
+  const { setNodeContent, addNode } = useStore(
+    useShallow(selector),
+  );
   const makeRegQuery = useCallback(async () => {
 
     const res = await fetch('/api/rag-query', {
@@ -29,13 +36,14 @@ export default function TextNode({ data, id}: { data: NodeData, id: string }) {
       return;
     }
     const jsonData = await res.json() as any;
+    setNodeContent(id, jsonData.data);
     // updateContent(id, () => jsonData.data);
     // readStreamAsString(res.body as ReadableStream<any>, (c) => updateContent(id, prevMessage => prevMessage + c));
-  }, [id, onEvent])
+  }, [id])
 
   const addNewNode = useCallback(() => {
-    onEvent(id, {event: NodeEventName.AddNode, params: {sourceId: id, query: ''}})
-  }, [onEvent]);
+    addNode(id);
+  }, [id]);
   return (
     <div className="w-32 border rounded bg-white p-1 border-zinc-600 text-xs">
       <div className=" border-zinc-500">
