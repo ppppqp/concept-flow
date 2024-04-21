@@ -22,7 +22,7 @@ export function* forceDirectedLayout(nodes: NodeType[], links: { source: string,
 }
 
 
-export async function* updateNodeLayout(nodes: Node[], edges: Edge[]){
+export async function* updateNodeLayout(nodes: Node[], edges: Edge[], updatedNodeId?: string, ){
   const formatNodes = nodes.map(n => ({
     id: n.id,
     x: n.position.x,
@@ -32,10 +32,11 @@ export async function* updateNodeLayout(nodes: Node[], edges: Edge[]){
 
   // const newNodes = forceDirectedLayout(formatNodes, edgeCloned);
   const generator = forceDirectedLayout(formatNodes, edgeCloned);
+  const updatedNode = nodes.find((n)=>n.id === updatedNodeId);
 
   for await (const newNodes of generator){
-    const offsetX = newNodes[0].x;
-    const offsetY = newNodes[0].y;
+    const offsetX = updatedNode ? newNodes[0].x - updatedNode.position.x : 0;
+    const offsetY = updatedNode ? newNodes[0].y - updatedNode.position.y : 0;
     const formatNewNodes = newNodes.map((n, i) => ({
       ...nodes[i],
       position: {

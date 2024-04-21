@@ -109,9 +109,9 @@ const useStore = create<RFState>((set, get) => ({
       edges: newEdges
     });
   },
-  updateLoop: async (newNodes: Node[], newEdges: Edge[]) => {
+  updateLoop: async (newNodes: Node[], newEdges: Edge[], updatedNodeId?: string) => {
     let startTime = performance.now(); // Track start time for interval calculation
-    const generator = updateNodeLayout(newNodes, newEdges);
+    const generator = updateNodeLayout(newNodes, newEdges, updatedNodeId);
     for await (const step of generator) {
       // Update visualization based on node positions
       set({
