@@ -23,7 +23,7 @@ type RFState = {
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
   setNodeContent: (id: string, content: string) => void;
-  addNode: (id: string) => void;
+  addNode: (id: string, content?: string) => void;
   updateLoop: (nodes: Node[], edges: Edge[]) => void;
 };
 
@@ -68,7 +68,7 @@ const useStore = create<RFState>((set, get) => ({
       })
     })
   },
-  addNode: (sourceId: string) => {
+  addNode: async (sourceId: string, content = '') => {
     const newNodeId = uuid();
     const nodes = get().nodes;
     const edges = get().edges;
@@ -77,7 +77,7 @@ const useStore = create<RFState>((set, get) => ({
       id: newNodeId,
       type: "node",
       position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
-      data: { content: "" },
+      data: { content },
     });
     const newEdges = [...edges];
     newEdges.push({
@@ -85,19 +85,17 @@ const useStore = create<RFState>((set, get) => ({
       source: sourceId,
       target: newNodeId,
     });
-    console.log(newEdges, newNodes)
     // const forcedNode = updateNodeLayout(newNodes, newEdges);
     set({
       edges: newEdges,
     })
-    get().updateLoop(newNodes, newEdges);
+    await get().updateLoop(newNodes, newEdges);
   },
 
   updateLoop: async (newNodes: Node[], newEdges: Edge[]) => {
     let startTime = performance.now(); // Track start time for interval calculation
     const generator = updateNodeLayout(newNodes, newEdges);
     for await (const step of generator) {
-      console.log("Iteration:", step);
       // Update visualization based on node positions
       set({
         nodes: step

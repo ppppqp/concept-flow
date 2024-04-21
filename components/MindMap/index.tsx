@@ -2,21 +2,10 @@
 import ReactFlow, {
   Controls,
   Background,
-  applyEdgeChanges,
-  applyNodeChanges,
-  addEdge,
-  NodeChange,
-  EdgeChange,
-  Node,
-  Edge,
-  Connection,
 } from "reactflow";
 import { useShallow } from 'zustand/react/shallow';
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import TextNode from "../Node";
-import "reactflow/dist/style.css";
-import { useNodeEvents } from "@/hooks/useNodeEvents";
-import {forceDirectedLayout} from '@/utils';
 import useStore from '@/components/store';
 const nodeTypes = {
   node: TextNode,
@@ -32,22 +21,6 @@ const selector = (state: any) => ({
 });
 
 export default function MindMap() {
-  useEffect(()=>{
-    const nodes = [
-      { id: '1', x: 100, y: 50 },
-      { id: '2', x: 200, y: 100 },
-      { id: '3', x: 50, y: 150 },
-    ];
-    
-    const links = [
-      { source: '1', target: '2' },
-      { source: '2', target: '3' },
-    ];
-    
-    console.log(forceDirectedLayout(nodes, links));
-  }, []);
-  
-
 
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } = useStore(
     useShallow(selector),
@@ -60,7 +33,7 @@ export default function MindMap() {
         id: "node-1",
         type: "node",
         position: { x: 0, y: 0 },
-        data: { content: "", onEvent: () => {} },
+        data: { content: "", concept: 'Elasticsearch' },
       },
     ]);
   }, []); 
