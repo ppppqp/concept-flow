@@ -22,7 +22,7 @@ type RFState = {
   onConnect: OnConnect;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
-  setNodeContent: (id: string, content: string) => void;
+  setNodeContent: (id: string, content: string | ((s: string)=>void)) => void;
   addNode: (id: string, content?: string) => void;
   updateLoop: (nodes: Node[], edges: Edge[]) => void;
 };
@@ -52,7 +52,7 @@ const useStore = create<RFState>((set, get) => ({
   setEdges: (edges: Edge[]) => {
     set({ edges });
   },
-  setNodeContent: (id: string, content: string) => {
+  setNodeContent: (id: string, content: string | ((s: string)=>void)) => {
     set({
       nodes: get().nodes.map((node) => {
         if (node.id === id) {
@@ -60,7 +60,7 @@ const useStore = create<RFState>((set, get) => ({
             ...node,
             data: {
               ...node.data,
-              content: content,
+              content: typeof content === 'string' ? content : content(node.data.content),
             },
           };
         }
@@ -68,7 +68,7 @@ const useStore = create<RFState>((set, get) => ({
       })
     })
   },
-  addNode: async (sourceId: string, content = '') => {
+  addNode: async (sourceId: string, concept = '') => {
     const newNodeId = uuid();
     const nodes = get().nodes;
     const edges = get().edges;
@@ -77,7 +77,7 @@ const useStore = create<RFState>((set, get) => ({
       id: newNodeId,
       type: "node",
       position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
-      data: { content },
+      data: { concept },
     });
     const newEdges = [...edges];
     newEdges.push({

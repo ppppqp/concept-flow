@@ -17,11 +17,13 @@ export async function POST(request: Request) {
     stream,
     messages: [{ role: "user", content: message }]
   });
-  // const openAIStream = OpenAIStream(response)
-  // return new StreamingTextResponse(openAIStream);
-
-
+  if(stream){
+    const openAIStream = OpenAIStream(response as any);
+    return new StreamingTextResponse(openAIStream);
+  } else{
+    const responseText = response.choices[0]?.message?.content || ""
+    return Response.json({data: responseText })
+  }
   // no streaming version
-  const responseText = response.choices[0]?.message?.content || ""
-  return Response.json({data: responseText })
+
 }
