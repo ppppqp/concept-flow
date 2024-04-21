@@ -6,7 +6,7 @@ import { useState, useMemo } from "react";
 export default function Content({ content }: { content: string }) {
   const [fold, setFold] = useState(false);
   const foldClassName = "max-h-0 overflow-hidden";
-  const expandClassName = "";
+  const expandClassName = "select-text";
   const icon = useMemo(() => {
     return (
       <div

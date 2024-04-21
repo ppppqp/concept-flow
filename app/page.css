@@ -9,4 +9,5 @@
 .react-flow__node{
   background-color: unset;
   background: unset;
+  user-select: text;
 }

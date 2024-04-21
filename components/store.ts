@@ -22,8 +22,8 @@ type RFState = {
   onConnect: OnConnect;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
-  setNodeContent: (id: string, content: string | ((s: string)=>void)) => void;
-  addNode: (id: string, content?: string) => void;
+  setNodeContent: (id: string, content: string | ((s: string) => void)) => void;
+  addNode: (id: string, concepts?: string[]) => void;
   updateLoop: (nodes: Node[], edges: Edge[]) => void;
 };
 
@@ -52,7 +52,7 @@ const useStore = create<RFState>((set, get) => ({
   setEdges: (edges: Edge[]) => {
     set({ edges });
   },
-  setNodeContent: (id: string, content: string | ((s: string)=>void)) => {
+  setNodeContent: (id: string, content: string | ((s: string) => void)) => {
     set({
       nodes: get().nodes.map((node) => {
         if (node.id === id) {
@@ -68,7 +68,7 @@ const useStore = create<RFState>((set, get) => ({
       })
     })
   },
-  addNode: async (sourceId: string, concept = '') => {
+  addNode: async (sourceId: string, concepts = ['Enter your concepts']) => {
     const newNodeId = uuid();
     const nodes = get().nodes;
     const edges = get().edges;
@@ -77,10 +77,10 @@ const useStore = create<RFState>((set, get) => ({
       id: newNodeId,
       type: "node",
       position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
-      data: { concept, degree: 0 },
+      data: { concepts: concepts, degree: 0 },
     });
     const sourceNode = newNodes.find(n => n.id === sourceId);
-    if(sourceNode){
+    if (sourceNode) {
       sourceNode.data.degree += 1;
     }
     const newEdges = [...edges];
@@ -95,14 +95,14 @@ const useStore = create<RFState>((set, get) => ({
     })
     await get().updateLoop(newNodes, newEdges);
   },
-  removeNode: async(targetId: string) => {
+  removeNode: async (targetId: string) => {
     const nodes = get().nodes;
     const newNodes = [...nodes];
     const toRemove = newNodes.findIndex(n => n.id === targetId);
     newNodes.splice(toRemove, 1);
 
     const edges = get().edges;
-    const newEdges = edges.filter((e)=>e.target !== targetId && e.source !== targetId);
+    const newEdges = edges.filter((e) => e.target !== targetId && e.source !== targetId);
 
     set({
       nodes: newNodes,
