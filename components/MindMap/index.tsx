@@ -34,12 +34,13 @@ export default function MindMap() {
         type: "node",
         position: { x: 0, y: 0 },
         data: { content: "", concepts: ['Elasticsearch', 'Indexing'], degree: 0 },
+        dragHandle: '.custom-drag-handle',
       },
     ]);
   }, []); 
 
   return (
-    <div style={{ height: "98vh" }} className="text-sm">
+    <div style={{ height: "98vh" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -48,6 +49,7 @@ export default function MindMap() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
+        fitViewOptions={{maxZoom: 1.2}}
       >
         <Background />
         <Controls />

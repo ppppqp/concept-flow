@@ -10,7 +10,7 @@ export default function Content({ content }: { content: string }) {
   const icon = useMemo(() => {
     return (
       <div
-        className="w-full cursor-pointer hover:bg-zinc-100 p-1 mb-2 rounded"
+        className="w-full cursor-pointer hover:bg-zinc-100 p-1 rounded"
         onClick={() => setFold((fold) => !fold)}
       >
         {fold ? (

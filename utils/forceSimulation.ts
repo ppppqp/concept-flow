@@ -6,12 +6,12 @@ export function* forceDirectedLayout(nodes: NodeType[], links: { source: string,
   const k = 0.3;
 
   // Repulsion constant for node-node forces
-  const repulsion = 1000;
+  const repulsion = 2000;
   // Simulation object using basic forces
   const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id((d: any) => d.id).strength(k))
     .force("charge", d3.forceManyBody().strength(-repulsion))
-    .force("collide", d3.forceCollide((d)=>10))
+    .force("collide", d3.forceCollide((d)=>40))
     .force("center", d3.forceCenter(0, 0));
 
   // Run the simulation for a set number of iterations

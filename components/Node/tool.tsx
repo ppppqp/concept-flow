@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import useStore from "../store";
 import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 // delete node, add node, generate content
 const toolClassName =
   "h-4 w-4 rounded hover:bg-zinc-100 cursor-pointer flex justify-center items-center m-1";
@@ -67,16 +68,16 @@ export default function Tool({
   return (
     <div className="flex justify-start items-center absolute bottom-0 right-0">
       <div className={toolClassName} onClick={onSpark}>
-        <SparklesIcon className="h-3 w-3 text-zinc-600 hover:text-yellow-600" />
+        <SparklesIcon className="h-10 w-10 text-zinc-600 hover:text-yellow-600" />
       </div>
       <div className={toolClassName} onClick={onRemove}>
-        <TrashIcon className="h-3 w-3 text-zinc-600 hover:text-red-700" />
+        <TrashIcon className="h-10 w-10 text-zinc-600 hover:text-red-700" />
       </div>
       <div className={toolClassName} onClick={onAddNode}>
-        <PlusCircleIcon className="h-3 w-3 text-zinc-600 hover:text-green-600" />
+        <PlusCircleIcon className="h-10 w-10 text-zinc-600 hover:text-green-600" />
       </div>
       <div className={toolClassName} onClick={onSpan}>
-        <CubeIcon className="h-3 w-3 text-zinc-600 hover:text-blue-700" />
+        <CubeIcon className="h-10 w-10 text-zinc-600 hover:text-blue-700" />
       </div>
     </div>
   );

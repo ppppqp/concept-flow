@@ -1,13 +1,12 @@
 .react-flow__handle {
-  opacity: 0.6;
-  background: #999;
+  background: #666;
+  width: 8px;
+  height: 8px;
+}
 
-}
-.react-flow__handle:hover{
-  opacity: 1;
-}
 .react-flow__node{
   background-color: unset;
   background: unset;
   user-select: text;
+  cursor: auto;
 }

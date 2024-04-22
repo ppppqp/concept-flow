@@ -76,6 +76,7 @@ const useStore = create<RFState>((set, get) => ({
     newNodes.push({
       id: newNodeId,
       type: "node",
+      dragHandle: '.custom-drag-handle',
       position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
       data: { concepts: concepts, degree: 0 },
     });
