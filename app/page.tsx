@@ -8,10 +8,37 @@ const introLine = `
 **Concept Flow** is an LGUI interaction paradigm that is aimed at **efficient systematic knowledge retrieval**.
 `;
 
-const problemLine = `#### Problem
-- The experience of LLM Chatbot for systematic information retrivial is still painful. To gather the information of all key points and aspects, you need to formulate and type prompts back-and-forth.
+const problemLine = `
+The experience of LLM Chatbot for systematic information retreieval is still painful. 
+
+Say I'd like to learn about a new subject, like *"trip to new york"*, which includes aspects of dining, accomodation, shopping, etc.
+
+- To deep dive into one of the aspects, we need to formulate and type prompts.
+
+- Also, we may lose context and forget to learn other aspects after deep diving into one.
 `
-const mindMapLine = `#### MindMap
+const mindMapLine = `
+- **Mind map** is a non-linear layout for information, which enables us to deep dive without losing the global view.
+`
+
+const nodeLine = `
+A **node** stands for a concept.
+Each node is pre-programmed to **explore and exploit with just a click**.
+
+
+To exploit current concept, click the <span style="color: #e1a107">yellow spark</span> button.
+To explore related concepts, click the <span style="color: blue">blue cube</span> button.
+To add custom concepts, click the  <span style="color: green">green plus</span> button.
+
+`
+const ragLine = `
+The content generated in each explore/exploit action is by RAG-augmented LLM to ensure both readability and credibility.
+The parent context will be carried when making RAG query so that the **reponse is correctly scoped**.
+`
+
+const begForStarLine = `### Try it out☝️!
+Try out this paradigm in playground. Tell us how you feel by creating an issue in [Github](https://github.com/ppppqp/concept-flow/issues) or reach out on [Twitter](https://twitter.com/QipingP).
+Hope that it helps you (or amuses you🐶).
 `
 export default function Home() {
   const initialNodes = useMemo(
@@ -26,7 +53,7 @@ export default function Home() {
       {
         id: 'problems',
         type: 'node',
-        position: { x: 350, y: -300},
+        position: { x: 400, y: -300},
         data: { content: problemLine, concepts: ['Problems']},
         dragHandle: ".custom-drag-handle",
         parentId: ROOT_NODE_ID,
@@ -34,13 +61,45 @@ export default function Home() {
       {
         id: 'MindMap',
         type: 'node',
-        position: { x: 350, y: 0},
-        data: { content: mindMapLine, concepts: ['MindMap']},
+        position: { x: 400, y: 0},
+        data: { content: mindMapLine, concepts: ['Mind map']},
         dragHandle: ".custom-drag-handle",
-      }
+        parentId: ROOT_NODE_ID,
+      },
+      {
+        id: 'Nodes',
+        type: 'node',
+        position: { x: 400, y: -150},
+        data: { content: nodeLine, concepts: ['Nodes']},
+        dragHandle: ".custom-drag-handle",
+        parentId: 'MindMap',
+      },
+      {
+        id: 'Try',
+        type: 'node',
+        position: { x: 400, y: -100},
+        data: { content: begForStarLine, concepts: ['Try it out!']},
+        dragHandle: ".custom-drag-handle",
+        parentId: 'problems',
+      },
+      {
+        id: 'RAG',
+        type: 'node',
+        position: { x: 400, y: 100},
+        data: { content: ragLine, concepts: ['RAG']},
+        dragHandle: ".custom-drag-handle",
+        parentId: 'MindMap',
+      },
     ],
     []
   );
+  const initialEdges = useMemo(()=>([
+    {id: 'link1', source: ROOT_NODE_ID, target: 'problems'},
+    {id: 'link1', source: ROOT_NODE_ID, target: 'MindMap'},
+    {id: 'link2', source: 'MindMap', target: 'Nodes'},
+    {id: 'link3', source: 'MindMap', target: 'RAG'},
+    {id: 'link4', source: 'problems', target: 'Try'},
+  ]), []);
   return (
     <main>
       <h1 className="absolute text-8xl text-zinc-700 text-center left-20 font-extralight italic ">
@@ -50,7 +109,7 @@ export default function Home() {
         An LGUI interaction paradigm for systematic knowledge retrieval
       </span>
 
-      <MindMap initialNodes={initialNodes} />
+      <MindMap initialNodes={initialNodes} initialEdges={initialEdges} />
     </main>
   );
 }

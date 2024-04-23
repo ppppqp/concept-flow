@@ -1,5 +1,5 @@
 "use client";
-import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
+import ReactFlow, { Controls, Background, MiniMap, Node, Edge } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
 import TextNode from "../Node";
@@ -19,6 +19,7 @@ const selector = (state: any) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
   setNodes: state.setNodes,
+  setEdges: state.setEdges,
   editModalOpen: state.editModalOpen,
   setEditModalOpen: state.setEditModalOpen,
 });
@@ -31,11 +32,13 @@ const uiSelector = (state: any) => ({
 export default function MindMap({
   height,
   initialNodes,
+  initialEdges,
 }: {
   height?: string;
   initialNodes?: Node[];
+  initialEdges?: Edge[];
 }) {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes, setEdges } =
     useStore(useShallow(selector));
   const { editModalOpen, setEditModalOpen } = useUIStore(
     useShallow(uiSelector)
@@ -53,7 +56,8 @@ export default function MindMap({
         },
       ]
     );
-  }, [initialNodes, setNodes]);
+    setEdges(initialEdges ??  []);
+  }, [initialNodes, setNodes, setEdges]);
 
   useEffect(() => {
     // const nodesData = {
