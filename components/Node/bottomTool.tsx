@@ -39,26 +39,32 @@ export default function Tool({
   id,
   concepts,
   content,
+  setLoading,
 }: {
   id: string;
   concepts: string[];
   content: string;
+  setLoading: (b: boolean) => void;
 }) {
   const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
   const onAddNode = useCallback(() => {
     addNode(id, [...concepts, 'Enter your concept']);
   }, [concepts, id, addNode]);
   const onSpan = useCallback(async ()=>{
+    setLoading(true);
     const data = await makeRegQuery(querySpan(concepts), false);
     const newConcepts = data.split(",");
     for await (const concept of newConcepts) {
       await addNode(id, [...concepts, concept]);
     }
-  }, [addNode, concepts, id]);
+    setLoading(false);
+  }, [addNode, concepts, id, setLoading]);
   const onSpark = useCallback(async ()=>{
+    setLoading(true);
     const stream: ReadableStream = await makeRegQuery(querySpark(concepts), true);
     setNodeContent(id, '');
     await readStreamAsString(stream, (c) => {setNodeContent(id, prevMessage => prevMessage + c)});
+    setLoading(false);
   }, [setNodeContent, concepts, id]);
 
   return (
