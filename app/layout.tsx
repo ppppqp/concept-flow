@@ -16,7 +16,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="h-10 w-full flex justify-end text-base pr-10">
+          <div className="flex gap-10">
+            <span className='underline underline-offset-4 cursor-pointer'><a className='text-black' href='/'>Home</a></span>
+            <span className='underline underline-offset-4 cursor-pointer'><a className='text-black' href='/playground'>Playground</a></span>
+            <span className='underline underline-offset-4 cursor-pointer'><a className='text-black' href='https://github.com/ppppqp/concept-flow' target='_blank'>Github</a></span>
+
+          </div>
+        </div>
+        {children}
+      </body>
     </html>
   );
 }

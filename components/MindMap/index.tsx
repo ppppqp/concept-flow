@@ -1,12 +1,11 @@
 "use client";
-import ReactFlow, { Controls, Background } from "reactflow";
+import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TextNode from "../Node";
 import useStore from "@/store/graph-store";
-import {ROOT_NODE_ID} from '../consts';
+import { ROOT_NODE_ID } from "../consts";
 import * as d3 from "d3";
-import Modal from "../Modal";
 import useUIStore from "@/store/ui-store";
 import EditNodeModal from "../Modal/EditNodeModal";
 const nodeTypes = {
@@ -26,26 +25,35 @@ const selector = (state: any) => ({
 
 const uiSelector = (state: any) => ({
   editModalOpen: state.editModalOpen,
-  setEditModalOpen: state.setEditModalOpen
-})
+  setEditModalOpen: state.setEditModalOpen,
+});
 
-export default function MindMap() {
+export default function MindMap({
+  height,
+  initialNodes,
+}: {
+  height?: string;
+  initialNodes?: Node[];
+}) {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
     useStore(useShallow(selector));
-  const {editModalOpen, setEditModalOpen} = useUIStore(useShallow(uiSelector));
+  const { editModalOpen, setEditModalOpen } = useUIStore(
+    useShallow(uiSelector)
+  );
   useEffect(() => {
     // init canvas
-    setNodes([
-      {
-        id: ROOT_NODE_ID,
-        type: "node",
-        position: { x: 0, y: 0 },
-        data: { content: "# Elasticsearch\n [aa](https://developers.google.com/custom-search/v1/using_rest)", concepts: ["Elasticsearch"], degree: 0 },
-        dragHandle: ".custom-drag-handle",
-      }
-      
-    ]);
-  }, []);
+    setNodes(
+      initialNodes ?? [
+        {
+          id: ROOT_NODE_ID,
+          type: "node",
+          position: { x: 0, y: 0 },
+          data: { content: "", concepts: ["Elasticsearch"], degree: 0 },
+          dragHandle: ".custom-drag-handle",
+        },
+      ]
+    );
+  }, [initialNodes, setNodes]);
 
   useEffect(() => {
     // const nodesData = {
@@ -63,8 +71,13 @@ export default function MindMap() {
   }, []);
 
   return (
-    <div style={{ height: "98vh" }}>
-      <EditNodeModal isOpen={editModalOpen} onClose={() => {setEditModalOpen(false)}}/>
+    <div style={{ height: height ?? "98vh" }}>
+      <EditNodeModal
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+        }}
+      />
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -77,6 +90,7 @@ export default function MindMap() {
       >
         <Background />
         <Controls />
+        <MiniMap pannable zoomable />
       </ReactFlow>
     </div>
   );
