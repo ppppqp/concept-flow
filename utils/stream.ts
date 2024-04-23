@@ -6,7 +6,10 @@ export function openAIStreamProcessor(s: string){
   while ((match = regex.exec(s)) !== null) {
     extractedTexts.push(match[1]); // Access the captured group (text after ": ")
   }
-  return extractedTexts.join('');
+  const str = extractedTexts.join('').replaceAll('\\n', '\n');
+  console.log(str, str.replaceAll('\\n',  '\n'), str.indexOf('\\n') );
+
+  return str;
 }
 
 export async function readStreamAsString(stream: ReadableStream, onChunk: (s: string) => void) {

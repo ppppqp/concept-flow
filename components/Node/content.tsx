@@ -1,3 +1,4 @@
+import { markdown } from "@/utils/markdown";
 export default function Content({
   content,
   fold,
@@ -9,7 +10,7 @@ export default function Content({
   const expandClassName = "select-text";
   return (
     <div className={fold ? foldClassName : expandClassName}>
-      {fold ? <div className="text-center">...</div> : content}
+      {fold ? <div className="text-center">...</div> : <div dangerouslySetInnerHTML={{__html: markdown(content)}}></div>}
     </div>
   );
 }

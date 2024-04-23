@@ -30,7 +30,7 @@ export default function MindMap() {
         id: ROOT_NODE_ID,
         type: "node",
         position: { x: 0, y: 0 },
-        data: { content: "", concepts: ["Elasticsearch"], degree: 0 },
+        data: { content: "# Elasticsearch\n [aa](https://developers.google.com/custom-search/v1/using_rest)", concepts: ["Elasticsearch"], degree: 0 },
         dragHandle: ".custom-drag-handle",
       }
       
