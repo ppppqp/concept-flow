@@ -8,7 +8,8 @@ import { useCallback } from "react";
 import useStore from "../store";
 import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { Endpoints } from "@/utils/makeRegQuery";
+
 // delete node, add node, generate content
 const toolClassName =
   "h-4 w-4 rounded cursor-pointer flex justify-center items-center m-1";
@@ -18,23 +19,9 @@ const selector = (state: any) => ({
   removeNode: state.removeNode,
   
 });
-const queryContext = (concept: string, context: string[]) => `
-The concept ${concept} is limited to the scope that it is specifically related to ${context}.
-`
-const querySpan = (concepts: string[]) => `
-I want to be an expert in the subject that is related to ${concepts}.
-The response should be a series of phrases that is concatenated by commas. 
-Each key concept that is important and worth diving into. Just the concept itself is enough: no extra information needed.
-The formatting correctness is very important.
-You should not include any concepts that already appeared in ${concepts}.
-Give 4 to 8 concepts.
-`;
-const querySpark = (concepts: string[]) => `
-I want to be an expert int the subject that is related to ${concepts}. 
-Please explain the subject to me. Be sure to address and cover all concepts including ${concepts}.
-For all concepts in ${concepts}, the more latter one is more important, and should be addressed primarily in your explanation. 
-The more former one mostly provides a scope and context for the latter ones, so you do not need to give any explanation to them.
-`;
+
+
+
 export default function Tool({
   id,
   concepts,
@@ -52,7 +39,7 @@ export default function Tool({
   }, [concepts, id, addNode]);
   const onSpan = useCallback(async ()=>{
     setLoading(true);
-    const data = await makeRegQuery(querySpan(concepts), false);
+    const data = await makeRegQuery(Endpoints.SPAN, {concepts}, false);
     const newConcepts = data.split(",");
     for await (const concept of newConcepts) {
       await addNode(id, [...concepts, concept]);
@@ -61,7 +48,7 @@ export default function Tool({
   }, [addNode, concepts, id, setLoading]);
   const onSpark = useCallback(async ()=>{
     setLoading(true);
-    const stream: ReadableStream = await makeRegQuery(querySpark(concepts), true);
+    const stream: ReadableStream = await makeRegQuery(Endpoints.SPARK, {concepts}, true);
     setNodeContent(id, '');
     await readStreamAsString(stream, (c) => {setNodeContent(id, prevMessage => prevMessage + c)});
     setLoading(false);
