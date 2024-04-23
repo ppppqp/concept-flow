@@ -14,7 +14,7 @@ export const queryGoogle = async(query: string) => {
   const bodyJson = await res.json();
   console.log('api');
   const items = bodyJson.items;
-  return items.slice(0, 5).map(item => ({
+  return items.slice(0, 5).map((item: any) => ({
     snippet: item.snippet,
     url: item.formattedUrl
   })) as GoogleRespItem[];

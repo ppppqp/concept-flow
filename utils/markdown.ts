@@ -10,7 +10,7 @@ export function markdown(s: string) {
     .use(remarkParse)
     .use(remarkRehype, {allowDangerousHtml: true})
     .use(rehypeRaw)
-    .use(rehypeExternalLinks, {target: ['_blank']})
+    .use(rehypeExternalLinks, {target: ['_blank']} as any)
     .use(rehypeFormat).use(rehypeStrinify);
   return processor.processSync(s).toString()
 }

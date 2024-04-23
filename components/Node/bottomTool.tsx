@@ -50,9 +50,9 @@ export default function Tool({
     setLoading(true);
     const stream: ReadableStream = await makeRegQuery(Endpoints.SPARK, {concepts}, true);
     setNodeContent(id, '');
-    await readStreamAsString(stream, (c) => {setNodeContent(id, prevMessage => prevMessage + c)});
+    await readStreamAsString(stream, (c) => {setNodeContent(id, (prevMessage: string) => prevMessage + c)});
     setLoading(false);
-  }, [setNodeContent, concepts, id]);
+  }, [setNodeContent, concepts, id, setLoading]);
 
   return (
     <div className="flex justify-start items-center absolute bottom-0 right-0">

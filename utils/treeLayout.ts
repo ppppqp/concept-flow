@@ -1,9 +1,13 @@
 import * as d3 from "d3";
 import { Node, Edge } from "reactflow";
-interface NodeData {
+
+interface FlatNodeData{
   id: string;
-  index: string; // origin index in the Node[]
-  children: Array<NodeData>;
+  index: number;
+  parentId?: string; // root does not have parentId
+}
+interface NodeData extends FlatNodeData{
+  children?: Array<NodeData>;
 }
 
 interface NodeTreeData {
@@ -15,13 +19,14 @@ interface NodeTreeData {
   height: number;
 }
 
-function createHierarchy(nodesData, rootId) {
-  const idMapping = nodesData.reduce((acc, el, i) => {
+
+function createHierarchy(nodesData: NodeData[], rootId: string) {
+  const idMapping = nodesData.reduce((acc: Record<string, number>, el, i) => {
     acc[el.id] = i;
     return acc;
   }, {});
 
-  let root;
+  let root: NodeData;
   nodesData.forEach((el) => {
     // Handle the root element
     if (el.id === rootId) {
@@ -29,12 +34,12 @@ function createHierarchy(nodesData, rootId) {
       return;
     }
     // Use our mapping to locate the parent element in our data array
-    const parentEl = nodesData[idMapping[el.parentId]];
+    const parentEl = nodesData[idMapping[el.parentId!]];
     // Add our current el to its parent's `children` array
     parentEl.children = [...(parentEl.children || []), el];
   });
 
-  return d3.hierarchy(root);
+  return d3.hierarchy<NodeData>(root!);
 }
 
 
@@ -49,13 +54,13 @@ export function treeLayout(nodes: Node[], rootId: string) {
   );
 
   const descendants = d3
-    .tree()
+    .tree<NodeData>()
     .nodeSize([100, 350])(root)
     .descendants() as d3.HierarchyPointNode<NodeData>[];
   // console.log('descendants', descendants);
   const newNodes = [...nodes];
 
-  const idMapping = descendants.reduce((acc, el, i) => {
+  const idMapping = descendants.reduce((acc: Record<string, number>, el, i) => {
     acc[el.data.id] = i;
     return acc;
   }, {});

@@ -13,7 +13,7 @@ export async function queryOpenAI(message: string, stream: boolean){
     const openAIStream = OpenAIStream(response as any);
     return new StreamingTextResponse(openAIStream);
   } else{
-    const responseText = response.choices[0]?.message?.content || ""
+    const responseText = (response as OpenAI.Chat.Completions.ChatCompletion).choices[0]?.message?.content || ""
     return Response.json({data: responseText })
   }
 }

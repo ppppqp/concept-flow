@@ -57,7 +57,7 @@ export default function MindMap({
       ]
     );
     setEdges(initialEdges ??  []);
-  }, [initialNodes, setNodes, setEdges]);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   useEffect(() => {
     // const nodesData = {
