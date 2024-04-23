@@ -29,7 +29,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
     removeNode(id);
   }, [removeNode, id]);
   return (
-    <div className="text-sm min-w-64 max-w-96 pb-4 border rounded-xl bg-white border-zinc-400 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)]">
+    <div className="text-sm min-w-64 max-w-80 pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
       <div>
         <div
           className={`flex w-full bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}

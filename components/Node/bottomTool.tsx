@@ -47,21 +47,19 @@ export default function Tool({
   const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
   const onAddNode = useCallback(() => {
     addNode(id, [...concepts, 'Enter your concept']);
-  }, [id]);
+  }, [concepts, id, addNode]);
   const onSpan = useCallback(async ()=>{
     const data = await makeRegQuery(querySpan(concepts), false);
     const newConcepts = data.split(",");
     for await (const concept of newConcepts) {
       await addNode(id, [...concepts, concept]);
     }
-  }, [addNode]);
+  }, [addNode, concepts, id]);
   const onSpark = useCallback(async ()=>{
     const stream: ReadableStream = await makeRegQuery(querySpark(concepts), true);
     setNodeContent(id, '');
-    await readStreamAsString(stream, (c) => setNodeContent(id, prevMessage => prevMessage + c));
-    // setNodeContent(id, prevMessage => prevMessage.replace(/\n/g, "\n"));
-  }, [setNodeContent]);
-
+    await readStreamAsString(stream, (c) => {setNodeContent(id, prevMessage => prevMessage + c)});
+  }, [setNodeContent, concepts, id]);
 
   return (
     <div className="flex justify-start items-center absolute bottom-0 right-0">

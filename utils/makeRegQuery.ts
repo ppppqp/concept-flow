@@ -1,3 +1,4 @@
+
 export const makeRegQuery = async (query: string, stream: boolean) => {
   const res = await fetch("/api/rag-query", {
     method: "POST", // Set method to POST
