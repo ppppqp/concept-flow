@@ -5,18 +5,14 @@ import MindMap from "@/components/MindMap";
 import { useMemo } from "react";
 
 const introLine = `
-# Concept Flow
-Concept flow is an LGUI interaction paradigm that is aimed at **efficient systematic knowledge retrieval**.
-
-## Mindmap
+**Concept Flow** is an LGUI interaction paradigm that is aimed at **efficient systematic knowledge retrieval**.
 `;
 
-const problemLine = `## Problems
-- **Search Engine** can not give concise, consumable information quickly.
-- **LLM Chatbot** can have hallucinations.
-- **Rag-enhanced LLM Chatbot** is good enough, but the interaction paradigm is still painful. To gather the information of all key points, you need to digest and type prompts back-and-forth.
+const problemLine = `#### Problem
+- The experience of LLM Chatbot for systematic information retrivial is still painful. To gather the information of all key points and aspects, you need to formulate and type prompts back-and-forth.
 `
-
+const mindMapLine = `#### MindMap
+`
 export default function Home() {
   const initialNodes = useMemo(
     () => [
@@ -39,7 +35,7 @@ export default function Home() {
         id: 'MindMap',
         type: 'node',
         position: { x: 350, y: 0},
-        data: { content: problemLine, concepts: ['Problems']},
+        data: { content: mindMapLine, concepts: ['MindMap']},
         dragHandle: ".custom-drag-handle",
       }
     ],
