@@ -27,3 +27,15 @@ export async function POST(request: Request) {
   // no streaming version
 
 }
+
+
+
+const GOOGLE_SEARCH_ENDPOINT = '';
+const queryGoogle = async(query: string, key: string) => {
+  const res = await fetch(GOOGLE_SEARCH_ENDPOINT, {
+    method: "POST", // Set method to POST
+    headers: { "Content-Type": "application/json" }, // Set headers for JSON data
+    body: JSON.stringify({ key, q: query, num: 5 }), // Convert data to JSON string
+  });
+  console.log(res);
+}
