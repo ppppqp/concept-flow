@@ -5,7 +5,7 @@ import {
   CubeIcon
 } from "@heroicons/react/24/outline";
 import { useCallback } from "react";
-import useStore from "../store";
+import useStore from "../../store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
 import { Endpoints } from "@/utils/makeRegQuery";

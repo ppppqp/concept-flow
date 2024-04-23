@@ -1,11 +1,14 @@
 "use client";
 import ReactFlow, { Controls, Background } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TextNode from "../Node";
-import useStore from "@/components/store";
+import useStore from "@/store/graph-store";
 import {ROOT_NODE_ID} from '../consts';
 import * as d3 from "d3";
+import Modal from "../Modal";
+import useUIStore from "@/store/ui-store";
+import EditNodeModal from "../Modal/EditNodeModal";
 const nodeTypes = {
   node: TextNode,
 };
@@ -17,12 +20,19 @@ const selector = (state: any) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
   setNodes: state.setNodes,
+  editModalOpen: state.editModalOpen,
+  setEditModalOpen: state.setEditModalOpen,
 });
+
+const uiSelector = (state: any) => ({
+  editModalOpen: state.editModalOpen,
+  setEditModalOpen: state.setEditModalOpen
+})
 
 export default function MindMap() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
     useStore(useShallow(selector));
-
+  const {editModalOpen, setEditModalOpen} = useUIStore(useShallow(uiSelector));
   useEffect(() => {
     // init canvas
     setNodes([
@@ -54,6 +64,7 @@ export default function MindMap() {
 
   return (
     <div style={{ height: "98vh" }}>
+      <EditNodeModal isOpen={editModalOpen} onClose={() => {setEditModalOpen(false)}}/>
       <ReactFlow
         nodes={nodes}
         edges={edges}

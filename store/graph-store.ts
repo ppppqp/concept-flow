@@ -13,7 +13,7 @@ import {
   applyEdgeChanges,
 } from 'reactflow';
 import { updateNodeLayout } from '@/utils/forceSimulation';
-import { ROOT_NODE_ID } from './consts';
+import { ROOT_NODE_ID } from '../components/consts';
 import { uuid } from 'uuidv4';
 import { treeLayout } from '../utils/treeLayout';
 type RFState = {

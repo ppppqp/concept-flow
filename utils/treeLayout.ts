@@ -50,7 +50,7 @@ export function treeLayout(nodes: Node[], rootId: string) {
 
   const descendants = d3
     .tree()
-    .nodeSize([100, 300])(root)
+    .nodeSize([100, 350])(root)
     .descendants() as d3.HierarchyPointNode<NodeData>[];
   // console.log('descendants', descendants);
   const newNodes = [...nodes];
