@@ -60,7 +60,11 @@ export function treeLayout(nodes: Node[], rootId: string) {
     return acc;
   }, {});
 
+
+  // keep the root not moved
+
   descendants.forEach((d) => {
+    if(d.depth === 0) return; // keep the root not moved
     const node = newNodes[d.data.index];
     // once we have parentId, the positiion computation in reactflow is different
     // the position coordinates become relative to parent's coordinate
