@@ -11,7 +11,7 @@ import { makeRegQuery, readStreamAsString } from "@/utils";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 // delete node, add node, generate content
 const toolClassName =
-  "h-4 w-4 rounded hover:bg-zinc-100 cursor-pointer flex justify-center items-center m-1";
+  "h-4 w-4 rounded cursor-pointer flex justify-center items-center m-1";
 const selector = (state: any) => ({
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
@@ -61,23 +61,18 @@ export default function Tool({
     await readStreamAsString(stream, (c) => setNodeContent(id, prevMessage => prevMessage + c));
     // setNodeContent(id, prevMessage => prevMessage.replace(/\n/g, "\n"));
   }, [setNodeContent]);
-  const onRemove = useCallback(async () => {
-    removeNode(id);
-  }, [removeNode]);
+
 
   return (
     <div className="flex justify-start items-center absolute bottom-0 right-0">
       <div className={toolClassName} onClick={onSpark}>
-        <SparklesIcon className="h-10 w-10 text-zinc-600 hover:text-yellow-600" />
-      </div>
-      <div className={toolClassName} onClick={onRemove}>
-        <TrashIcon className="h-10 w-10 text-zinc-600 hover:text-red-700" />
+        <SparklesIcon className="h-5 w-5 text-yellow-600 hover:text-yellow-500" />
       </div>
       <div className={toolClassName} onClick={onAddNode}>
-        <PlusCircleIcon className="h-10 w-10 text-zinc-600 hover:text-green-600" />
+        <PlusCircleIcon className="h-5 w-5 text-green-600 hover:text-green-500" />
       </div>
       <div className={toolClassName} onClick={onSpan}>
-        <CubeIcon className="h-10 w-10 text-zinc-600 hover:text-blue-700" />
+        <CubeIcon className="h-5 w-5 text-blue-600 hover:text-blue-500" />
       </div>
     </div>
   );

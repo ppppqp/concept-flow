@@ -13,7 +13,9 @@ import {
   applyEdgeChanges,
 } from 'reactflow';
 import { updateNodeLayout } from '@/utils/forceSimulation';
+import { ROOT_NODE_ID } from './consts';
 import { uuid } from 'uuidv4';
+import { treeLayout } from '../utils/treeLayout';
 type RFState = {
   nodes: Node[];
   edges: Edge[];
@@ -24,7 +26,8 @@ type RFState = {
   setEdges: (edges: Edge[]) => void;
   setNodeContent: (id: string, content: string | ((s: string) => void)) => void;
   addNode: (id: string, concepts?: string[]) => void;
-  updateLoop: (nodes: Node[], edges: Edge[]) => void;
+  updateForceLayout: (nodes: Node[], edges: Edge[]) => void;
+  updateTreeLayout: (nodes: Node[]) => void;
 };
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
@@ -77,6 +80,7 @@ const useStore = create<RFState>((set, get) => ({
       id: newNodeId,
       type: "node",
       dragHandle: '.custom-drag-handle',
+      parentId: sourceId,
       position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
       data: { concepts: concepts, degree: 0 },
     });
@@ -94,23 +98,25 @@ const useStore = create<RFState>((set, get) => ({
     set({
       edges: newEdges,
     })
-    await get().updateLoop(newNodes, newEdges);
+    // await get().updateForceLayout(newNodes, newEdges);
+    get().updateTreeLayout(newNodes);
   },
   removeNode: async (targetId: string) => {
+    if(targetId === ROOT_NODE_ID){
+      return;
+    }
     const nodes = get().nodes;
-    const newNodes = [...nodes];
-    const toRemove = newNodes.findIndex(n => n.id === targetId);
-    newNodes.splice(toRemove, 1);
+    const newNodes = nodes.filter(n => n.id !== targetId && n.parentId !== targetId);
 
     const edges = get().edges;
     const newEdges = edges.filter((e) => e.target !== targetId && e.source !== targetId);
-
+  
     set({
       nodes: newNodes,
       edges: newEdges
     });
   },
-  updateLoop: async (newNodes: Node[], newEdges: Edge[], updatedNodeId?: string) => {
+  updateForceLayout: async (newNodes: Node[], newEdges: Edge[], updatedNodeId?: string) => {
     let startTime = performance.now(); // Track start time for interval calculation
     const generator = updateNodeLayout(newNodes, newEdges, updatedNodeId);
     for await (const step of generator) {
@@ -130,6 +136,12 @@ const useStore = create<RFState>((set, get) => ({
 
       startTime = performance.now(); // Update start time for next iteration
     }
+  },
+  updateTreeLayout: async(nodes: Node[]) => {
+    const newNodes = treeLayout(nodes, ROOT_NODE_ID);
+    set({
+      nodes: newNodes
+    })
   }
 }));
 

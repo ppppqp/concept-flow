@@ -1,12 +1,11 @@
 "use client";
-import ReactFlow, {
-  Controls,
-  Background,
-} from "reactflow";
-import { useShallow } from 'zustand/react/shallow';
+import ReactFlow, { Controls, Background } from "reactflow";
+import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
 import TextNode from "../Node";
-import useStore from '@/components/store';
+import useStore from "@/components/store";
+import {ROOT_NODE_ID} from '../consts';
+import * as d3 from "d3";
 const nodeTypes = {
   node: TextNode,
 };
@@ -21,23 +20,37 @@ const selector = (state: any) => ({
 });
 
 export default function MindMap() {
-
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } = useStore(
-    useShallow(selector),
-  );
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
+    useStore(useShallow(selector));
 
   useEffect(() => {
     // init canvas
     setNodes([
       {
-        id: "node-1",
+        id: ROOT_NODE_ID,
         type: "node",
         position: { x: 0, y: 0 },
-        data: { content: "", concepts: ['Elasticsearch', 'Indexing'], degree: 0 },
-        dragHandle: '.custom-drag-handle',
-      },
+        data: { content: "", concepts: ["Elasticsearch"], degree: 0 },
+        dragHandle: ".custom-drag-handle",
+      }
+      
     ]);
-  }, []); 
+  }, []);
+
+  useEffect(() => {
+    // const nodesData = {
+    //   id: 1,
+    //   name: "Root Node",
+    //   children: [{ id: 2, name: "Child 1" }],
+    // };
+    // const treeLayout = d3.tree().size([500, 500]);
+    // const root = d3.hierarchy(nodesData);
+    // console.log('nodesData', nodesData)
+    // console.log('root', root);
+    // // console.log(treeLayout(root));
+    // console.log("descendents", root.descendants());
+    // console.log("links", root.links());
+  }, []);
 
   return (
     <div style={{ height: "98vh" }}>
@@ -49,7 +62,7 @@ export default function MindMap() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{maxZoom: 1.2}}
+        fitViewOptions={{ maxZoom: 1.2 }}
       >
         <Background />
         <Controls />
