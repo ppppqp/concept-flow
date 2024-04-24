@@ -75,7 +75,7 @@ export default function MindMap({
   }, []);
 
   return (
-    <div style={{ height: height ?? "98vh" }}>
+    <div style={{ height: height ?? "95vh" }}>
       <EditNodeModal
         isOpen={editModalOpen}
         onClose={() => {

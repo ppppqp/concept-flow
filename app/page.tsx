@@ -19,6 +19,7 @@ Say I'd like to learn about a new subject, like *"trip to new york"*, which incl
 `
 const mindMapLine = `
 - **Mind map** is a non-linear layout for information, which enables us to deep dive without losing the global view.
+ Closed source products like [Albus](https://albus.org/) have already pioneered using this paradigm.
 `
 
 const nodeLine = `

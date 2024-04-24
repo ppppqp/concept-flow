@@ -10,6 +10,8 @@ const querySpan = (concepts: string[]) => `
 I want to be an expert in the subject that is related to ${concepts}.
 The response should be a series of phrases that is concatenated by commas. 
 Each key concept that is important and worth diving into. Just the concept itself is enough: no extra information needed.
+For example, if the concept is a trip to New York, the related concepts should be like accomodation, dining, travel, New York landmarks, etc.
+
 The formatting correctness is very important.
 You should not include any concepts that already appeared in ${concepts}.
 Give 4 to 8 concepts.
