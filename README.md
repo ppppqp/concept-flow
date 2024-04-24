@@ -75,6 +75,11 @@ This project requires three keys:
     export GOOGLE_SEARCH_CX="zzz"
    ```
 
+5. Run the project locally
+   ```bash
+    npm run dev
+   ```
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
