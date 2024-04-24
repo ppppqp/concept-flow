@@ -7,8 +7,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://i.imgur.com/Rz2QOyF.png" alt="Logo">
+  <a href="https://concept-flow.netlify.app/">
+    <img src="https://i.imgur.com/Rz2QOyF.png" alt="Logo" width="300px">
   </a>
 
   <h3 align="center">Concept Flow</h3>
@@ -95,6 +95,3 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License.
 
-
-
-[product-screenshot]: https://i.imgur.com/Xuf1Xwq.png
