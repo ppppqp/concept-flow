@@ -36,7 +36,7 @@ To deep dive into one of the aspects, we need to formulate and type prompts. Als
 
 Mind map is a non-linear layout for information, which enables us to deep dive without losing the global view. So combining , we can achieve greater efficiency in information retrieval.
 
-There are many products using this paradigm already, like [Albus](https://albus.org/). While they provide way more functions like image generation, this open-source project aims to keep it simple and is specially designed for boosting knowledge retrieval.
+There are many products using this paradigm already, like [Albus](https://albus.org/). While some provide way more functions like image generation, this open-source project aims to is specially designed for boosting knowledge retrieval like [AmyMind](https://amymind.com/).
 
 
 <!-- GETTING STARTED -->
