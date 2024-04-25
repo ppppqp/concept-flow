@@ -59,20 +59,6 @@ export default function MindMap({
     setEdges(initialEdges ??  []);
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
-  useEffect(() => {
-    // const nodesData = {
-    //   id: 1,
-    //   name: "Root Node",
-    //   children: [{ id: 2, name: "Child 1" }],
-    // };
-    // const treeLayout = d3.tree().size([500, 500]);
-    // const root = d3.hierarchy(nodesData);
-    // console.log('nodesData', nodesData)
-    // console.log('root', root);
-    // // console.log(treeLayout(root));
-    // console.log("descendents", root.descendants());
-    // console.log("links", root.links());
-  }, []);
 
   return (
     <div style={{ height: height ?? "95vh" }}>

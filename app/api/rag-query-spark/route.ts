@@ -18,6 +18,7 @@ ${citations}
 
 Answer in markdown syntax.
 If you have used the references in response, please quote the reference using markdown hyperlink syntax, i.e [referenced material](url)
+Make sure to include the url in the parenthesis to make the link accessible.
 `;
 }
 

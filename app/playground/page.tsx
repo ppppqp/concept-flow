@@ -11,11 +11,10 @@ Then click the <span style="color: #e1a107">yellow spark</span> button to explor
 
 💡Some ideas for root concept:
 
-- Large Language Model
-- Sky Diving
-- 🍔 *(I mean you can literally drop an emoji)*
 - Trip to New York
+- 🍔 *(I mean you can literally drop an emoji)*
 - Global warming
+- Elasticsearch
 `
 export default function Playground() {
   const initialNodes = useMemo(

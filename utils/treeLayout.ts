@@ -52,12 +52,10 @@ export function treeLayout(nodes: Node[], rootId: string) {
     })),
     rootId
   );
-  console.log(root);
   const descendants = d3
     .tree<NodeData>()
     .nodeSize([100, 350])(root)
     .descendants() as d3.HierarchyPointNode<NodeData>[];
-  // console.log('descendants', descendants);
   const newNodes = [...nodes];
 
   const idMapping = descendants.reduce((acc: Record<string, number>, el, i) => {
