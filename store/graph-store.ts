@@ -27,7 +27,7 @@ type RFState = {
   setNodeContent: (id: string, content: string | ((s: string) => void)) => void;
   addNode: (id: string, concepts?: string[]) => void;
   updateForceLayout: (nodes: Node[], edges: Edge[]) => void;
-  updateTreeLayout: (nodes: Node[]) => void;
+  updateTreeLayout: (nodes: Node[], updatedNode?: string) => void;
 };
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
@@ -99,7 +99,7 @@ const useStore = create<RFState>((set, get) => ({
       edges: newEdges,
     })
     // await get().updateForceLayout(newNodes, newEdges);
-    get().updateTreeLayout(newNodes);
+    get().updateTreeLayout(newNodes, sourceId);
   },
   removeNode: async (targetId: string) => {
     if(targetId === ROOT_NODE_ID){
@@ -137,8 +137,8 @@ const useStore = create<RFState>((set, get) => ({
       startTime = performance.now(); // Update start time for next iteration
     }
   },
-  updateTreeLayout: async(nodes: Node[]) => {
-    const newNodes = treeLayout(nodes, ROOT_NODE_ID);
+  updateTreeLayout: async(nodes: Node[], updatedNode?: string) => {
+    const newNodes = treeLayout(nodes, updatedNode || ROOT_NODE_ID);
     set({
       nodes: newNodes
     })

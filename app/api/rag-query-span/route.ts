@@ -14,7 +14,7 @@ For example, if the concept is a trip to New York, the related concepts should b
 
 The formatting correctness is very important.
 You should not include any concepts that already appeared in ${concepts}.
-Give 4 to 8 concepts.
+Give 4 to 6 concepts.
 `;
 export async function POST(request: Request) {
   const { concepts, stream } = await request.json()

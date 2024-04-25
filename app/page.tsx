@@ -96,10 +96,10 @@ export default function Home() {
   );
   const initialEdges = useMemo(()=>([
     {id: 'link1', source: ROOT_NODE_ID, target: 'problems'},
-    {id: 'link1', source: ROOT_NODE_ID, target: 'MindMap'},
-    {id: 'link2', source: 'MindMap', target: 'Nodes'},
-    {id: 'link3', source: 'MindMap', target: 'RAG'},
-    {id: 'link4', source: 'problems', target: 'Try'},
+    {id: 'link2', source: ROOT_NODE_ID, target: 'MindMap'},
+    {id: 'link3', source: 'MindMap', target: 'Nodes'},
+    {id: 'link4', source: 'MindMap', target: 'RAG'},
+    {id: 'link5', source: 'problems', target: 'Try'},
   ]), []);
   return (
     <main>

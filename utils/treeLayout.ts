@@ -1,3 +1,4 @@
+import { ROOT_NODE_ID } from "@/components/consts";
 import * as d3 from "d3";
 import { Node, Edge } from "reactflow";
 
@@ -29,7 +30,7 @@ function createHierarchy(nodesData: NodeData[], rootId: string) {
   let root: NodeData;
   nodesData.forEach((el) => {
     // Handle the root element
-    if (el.id === rootId) {
+    if (el.id === rootId || el.id === ROOT_NODE_ID) {
       root = el;
       return;
     }
@@ -38,7 +39,6 @@ function createHierarchy(nodesData: NodeData[], rootId: string) {
     // Add our current el to its parent's `children` array
     parentEl.children = [...(parentEl.children || []), el];
   });
-
   return d3.hierarchy<NodeData>(root!);
 }
 
@@ -52,7 +52,7 @@ export function treeLayout(nodes: Node[], rootId: string) {
     })),
     rootId
   );
-
+  console.log(root);
   const descendants = d3
     .tree<NodeData>()
     .nodeSize([100, 350])(root)
