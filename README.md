@@ -95,3 +95,5 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License.
 
+
+[product-screenshot]: https://i.imgur.com/Xuf1Xwq.png
