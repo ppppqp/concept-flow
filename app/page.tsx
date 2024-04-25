@@ -103,10 +103,10 @@ export default function Home() {
   ]), []);
   return (
     <main>
-      <h1 className="absolute text-8xl text-zinc-700 text-center left-20 font-extralight italic ">
+      <h1 className="absolute text-4xl md:text-8xl text-zinc-700 text-center left-20 font-extralight italic">
         Concept Flow
       </h1>
-      <span className="absolute text-xl text-zinc-700 text-center top-40 left-32 italic underline underline-offset-2">
+      <span className="absolute text-base md:text-xl text-zinc-700 text-center top-24  md:top-40 left-32 italic underline underline-offset-2">
         An LGUI interaction paradigm for systematic knowledge retrieval
       </span>
 
