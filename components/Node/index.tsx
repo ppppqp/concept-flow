@@ -2,15 +2,10 @@ import { Handle, Position } from "reactflow";
 import Tool from "./bottomTool";
 import Content from "./content";
 import Concepts from "./concepts";
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 
-import {
-  XCircleIcon,
-  ArrowsPointingOutIcon,
-  ArrowsPointingInIcon,
-  MinusIcon,
-} from "@heroicons/react/24/solid";
+import { XCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
 import useStore from "../../store/graph-store";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -59,15 +54,19 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
       setNodeHeight(id, newHeight);
     });
     resizeObserver.observe(contentRef.current!);
-    return ()=>resizeObserver.disconnect();
+    return () => resizeObserver.disconnect();
   }, [setNodeHeight, id]);
 
   return (
-    <div className={`text-sm w-80 pb-4 rounded-xl bg-white border border-zinc-200 shadow-md`}>
+    <div
+      className={`text-sm w-80 pb-4 rounded-xl bg-white border border-zinc-200 shadow-md`}
+    >
       <div>
-        <div className="absolute left-1/2 translate-x-[-50%] top-1.5"><Concepts id={id} concepts={concepts} /></div>
+        <div className="absolute left-1/2 translate-x-[-50%] top-1.5">
+          <Concepts id={id} concepts={concepts} />
+        </div>
         <div
-          onClick={onFold} 
+          onClick={onFold}
           className={`flex cursor-pointer justify-center w-full h-8 bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}
         >
           <div
@@ -89,8 +88,8 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
           </div>
         </div>
         <div className="p-2">
-          <SimpleBar style={{maxHeight: 200}}>
-          <Content contentRef={contentRef} content={content} fold={fold} />
+          <SimpleBar style={{ maxHeight: 200 }}>
+            <Content contentRef={contentRef} content={content} fold={fold} />
           </SimpleBar>
         </div>
 

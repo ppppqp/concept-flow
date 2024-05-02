@@ -13,10 +13,12 @@ import {
   applyEdgeChanges,
 } from "reactflow";
 import { updateNodeLayout } from "@/utils/forceSimulation";
+import { saveLocalStorage } from "@/utils/localStorage";
 import { ROOT_NODE_ID } from "../components/consts";
 import { uuid } from "uuidv4";
 import { treeLayout, customLayout, documentLayout} from "../utils/treeLayout";
 type RFState = {
+  sessionId: string;
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
@@ -29,10 +31,12 @@ type RFState = {
   updateForceLayout: (nodes: Node[], edges: Edge[]) => void;
   updateTreeLayout: (nodes: Node[]) => void;
   setNodeHeight: (nodeId: string, height: number) => void;
+  save: () => void;
 };
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useStore = create<RFState>((set, get) => ({
+  sessionId: uuid(),
   nodes: [],
   edges: [],
   onNodesChange: (changes: NodeChange[]) => {
@@ -167,6 +171,10 @@ const useStore = create<RFState>((set, get) => ({
     // no update tree layout for now.
     // get().updateTreeLayout(newNodes);
   },
+  save: () => {
+    const concept = get().nodes.find((n) => n.id === ROOT_NODE_ID)?.data.concepts[0];
+    return saveLocalStorage(get().sessionId, concept, get().nodes, get().edges);
+  }
 }));
 
 export default useStore;

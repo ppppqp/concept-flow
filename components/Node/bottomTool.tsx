@@ -9,15 +9,14 @@ import useStore from "../../store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
 import { Endpoints } from "@/utils/makeRegQuery";
-
 // delete node, add node, generate content
 const toolClassName =
   "h-4 w-4 rounded cursor-pointer flex justify-center items-center m-1";
 const selector = (state: any) => ({
+  save: state.save,
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
   removeNode: state.removeNode,
-  
 });
 
 
@@ -33,7 +32,7 @@ export default function Tool({
   content: string;
   setLoading: (b: boolean) => void;
 }) {
-  const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
+  const { addNode, setNodeContent, removeNode, save } = useStore(useShallow(selector));
   const onAddNode = useCallback(() => {
     addNode(id, [...concepts, 'Enter your concept']);
   }, [concepts, id, addNode]);
@@ -45,7 +44,8 @@ export default function Tool({
       await addNode(id, [...concepts, concept]);
     }
     setLoading(false);
-  }, [addNode, concepts, id, setLoading]);
+    save()
+  }, [addNode, concepts, id, setLoading, save]);
   const onSpark = useCallback(async ()=>{
     setLoading(true);
     const stream: ReadableStream = await makeRegQuery(Endpoints.SPARK, {concepts}, true);

@@ -7,6 +7,7 @@ import useStore from "@/store/graph-store";
 import { ROOT_NODE_ID } from "@/components/consts";
 import Document from "@/components/Document";
 import Switch from "@/components/Switch";
+import Sidebar from "@/components/Sidebar";
 enum Mode {
   MindMap,
   Document,
@@ -56,6 +57,9 @@ export default function Playground() {
   }, [initialNodes, setNodes, setEdges]);
   return (
     <>
+      <div className="absolute left-0 flex text-base gap-2 z-40">
+        <Sidebar />
+      </div>
       <div className="absolute right-8 flex text-base gap-2 z-40">
         <Switch
           check={mode === Mode.MindMap}
