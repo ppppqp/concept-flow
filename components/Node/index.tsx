@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Cog6ToothIcon, CogIcon } from "@heroicons/react/24/outline";
 import useStore from "../../store/graph-store";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useUIStore from "@/store/ui-store";
 export interface NodeData {
@@ -19,6 +19,7 @@ export interface NodeData {
   degree: number;
 }
 const selector = (state: any) => ({
+  setNodeHeight: state.setNodeHeight,
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
   removeNode: state.removeNode,
@@ -31,17 +32,32 @@ const uiSelector = (state: any) => ({
 
 export default function TextNode({ data, id }: { data: NodeData; id: string }) {
   const { content, concepts } = data;
-  const { removeNode } = useStore(useShallow(selector));
+  const { removeNode, setNodeHeight } = useStore(useShallow(selector));
   const [fold, setFold] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { editModalOpen, setEditModalOpen } = useUIStore(useShallow(uiSelector));
-
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { editModalOpen, setEditModalOpen } = useUIStore(
+    useShallow(uiSelector)
+  );
+  const onFold = useCallback(() => {
+    setFold((f) => !f);
+    setTimeout(
+      () => {
+        const height = contentRef?.current?.clientHeight;
+        setNodeHeight(id, height);
+      },
+      1
+    );
+  }, [id, setNodeHeight]);
   const onRemove = useCallback(async () => {
     removeNode(id);
   }, [removeNode, id]);
-  const onEdit = useCallback(() => setEditModalOpen(true, id), [setEditModalOpen, id]);
+  const onEdit = useCallback(
+    () => setEditModalOpen(true, id),
+    [setEditModalOpen, id]
+  );
   return (
-    <div className="text-sm min-w-64 max-w-80 pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
+    <div className="text-sm w-80 pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
       <div>
         <div
           className={`flex justify-center w-full bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}
@@ -60,12 +76,12 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
             {fold ? (
               <ArrowsPointingOutIcon
                 className="h-3 w-3 text-zinc-800 hover:text-zinc-700 cursor-pointer"
-                onClick={() => setFold((f) => !f)}
+                onClick={onFold}
               />
             ) : (
               <ArrowsPointingInIcon
                 className="h-3 w-3 text-zinc-800 hover:text-zinc-700 cursor-pointer"
-                onClick={() => setFold((f) => !f)}
+                onClick={onFold}
               />
             )}
             <Cog6ToothIcon
@@ -81,7 +97,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
           </div>
         </div>
         <div className="p-2">
-          <Content content={content} fold={fold} />
+          <Content contentRef={contentRef} content={content} fold={fold} />
         </div>
 
         <Tool

@@ -1,0 +1,17 @@
+.react-flow__handle {
+  background: #666;
+  width: 8px;
+  height: 8px;
+}
+
+.react-flow__node{
+  background-color: unset;
+  background: unset;
+  user-select: text;
+  cursor: auto;
+}
+
+.react-flow__controls-button{
+  width: 30px;
+  height: 30px;
+}

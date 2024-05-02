@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   Connection,
   Edge,
@@ -11,11 +11,11 @@ import {
   OnConnect,
   applyNodeChanges,
   applyEdgeChanges,
-} from 'reactflow';
-import { updateNodeLayout } from '@/utils/forceSimulation';
-import { ROOT_NODE_ID } from '../components/consts';
-import { uuid } from 'uuidv4';
-import { treeLayout } from '../utils/treeLayout';
+} from "reactflow";
+import { updateNodeLayout } from "@/utils/forceSimulation";
+import { ROOT_NODE_ID } from "../components/consts";
+import { uuid } from "uuidv4";
+import { treeLayout, customTreeLayout} from "../utils/treeLayout";
 type RFState = {
   nodes: Node[];
   edges: Edge[];
@@ -28,6 +28,7 @@ type RFState = {
   addNode: (id: string, concepts?: string[]) => void;
   updateForceLayout: (nodes: Node[], edges: Edge[]) => void;
   updateTreeLayout: (nodes: Node[], updatedNode?: string) => void;
+  setNodeHeight: (nodeId: string, height: number) => void;
 };
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
@@ -63,15 +64,18 @@ const useStore = create<RFState>((set, get) => ({
             ...node,
             data: {
               ...node.data,
-              content: typeof content === 'string' ? content : content(node.data.content),
+              content:
+                typeof content === "string"
+                  ? content
+                  : content(node.data.content),
             },
           };
         }
         return node;
-      })
-    })
+      }),
+    });
   },
-  addNode: async (sourceId: string, concepts = ['Enter your concepts']) => {
+  addNode: async (sourceId: string, concepts = ["Enter your concepts"]) => {
     const newNodeId = uuid();
     const nodes = get().nodes;
     const edges = get().edges;
@@ -79,12 +83,16 @@ const useStore = create<RFState>((set, get) => ({
     newNodes.push({
       id: newNodeId,
       type: "node",
-      dragHandle: '.custom-drag-handle',
+      dragHandle: ".custom-drag-handle",
+      draggable: false,
       parentId: sourceId,
-      position: { x: Math.floor(Math.random() * 100), y: Math.floor(Math.random() * 100) },
-      data: { concepts: concepts, degree: 0 },
+      position: {
+        x: Math.floor(Math.random() * 100),
+        y: Math.floor(Math.random() * 100),
+      },
+      data: { concepts: concepts, degree: 0, height: 0, },
     });
-    const sourceNode = newNodes.find(n => n.id === sourceId);
+    const sourceNode = newNodes.find((n) => n.id === sourceId);
     if (sourceNode) {
       sourceNode.data.degree += 1;
     }
@@ -97,33 +105,41 @@ const useStore = create<RFState>((set, get) => ({
     // const forcedNode = updateNodeLayout(newNodes, newEdges);
     set({
       edges: newEdges,
-    })
+    });
     // await get().updateForceLayout(newNodes, newEdges);
     get().updateTreeLayout(newNodes, sourceId);
   },
   removeNode: async (targetId: string) => {
-    if(targetId === ROOT_NODE_ID){
+    if (targetId === ROOT_NODE_ID) {
       return;
     }
     const nodes = get().nodes;
-    const newNodes = nodes.filter(n => n.id !== targetId && n.parentId !== targetId);
+    const newNodes = nodes.filter(
+      (n) => n.id !== targetId && n.parentId !== targetId
+    );
 
     const edges = get().edges;
-    const newEdges = edges.filter((e) => e.target !== targetId && e.source !== targetId);
-  
+    const newEdges = edges.filter(
+      (e) => e.target !== targetId && e.source !== targetId
+    );
+
     set({
       nodes: newNodes,
-      edges: newEdges
+      edges: newEdges,
     });
   },
-  updateForceLayout: async (newNodes: Node[], newEdges: Edge[], updatedNodeId?: string) => {
+  updateForceLayout: async (
+    newNodes: Node[],
+    newEdges: Edge[],
+    updatedNodeId?: string
+  ) => {
     let startTime = performance.now(); // Track start time for interval calculation
     const generator = updateNodeLayout(newNodes, newEdges, updatedNodeId);
     for await (const step of generator) {
       // Update visualization based on node positions
       set({
-        nodes: step
-      })
+        nodes: step,
+      });
 
       // Calculate time elapsed since last iteration
       const elapsedTime = performance.now() - startTime;
@@ -137,12 +153,19 @@ const useStore = create<RFState>((set, get) => ({
       startTime = performance.now(); // Update start time for next iteration
     }
   },
-  updateTreeLayout: async(nodes: Node[], updatedNode?: string) => {
-    const newNodes = treeLayout(nodes, updatedNode || ROOT_NODE_ID);
+  updateTreeLayout: async (nodes: Node[], updatedNode?: string) => {
+    console.log('nodes inside updateTreeLayout', nodes);
+    const newNodes = customTreeLayout(nodes, updatedNode || ROOT_NODE_ID);
     set({
-      nodes: newNodes
-    })
-  }
+      nodes: newNodes,
+    });
+  },
+  setNodeHeight: async (nodeId: string, height: number) => {
+    const newNodes = [...get().nodes];
+    const updateNode = newNodes.find((n) => n.id === nodeId)!;
+    updateNode.data.height = height;
+    get().updateTreeLayout(newNodes, updateNode.parentId || ROOT_NODE_ID);
+  },
 }));
 
 export default useStore;

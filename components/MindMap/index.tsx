@@ -53,6 +53,7 @@ export default function MindMap({
           position: { x: 0, y: 0 },
           data: { content: "", concepts: ["Elasticsearch"], degree: 0 },
           dragHandle: ".custom-drag-handle",
+          draggable: false,
         },
       ]
     );

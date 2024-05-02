@@ -1,4 +1,3 @@
-import "reactflow/dist/style.css";
 import "./page.css";
 import { ROOT_NODE_ID } from "@/components/consts";
 import MindMap from "@/components/MindMap";

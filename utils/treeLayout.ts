@@ -6,6 +6,7 @@ interface FlatNodeData{
   id: string;
   index: number;
   parentId?: string; // root does not have parentId
+  height: number;
 }
 interface NodeData extends FlatNodeData{
   children?: Array<NodeData>;
@@ -17,7 +18,6 @@ interface NodeTreeData {
   x: number;
   y: number;
   depth: number;
-  height: number;
 }
 
 
@@ -42,13 +42,13 @@ function createHierarchy(nodesData: NodeData[], rootId: string) {
   return d3.hierarchy<NodeData>(root!);
 }
 
-
 export function treeLayout(nodes: Node[], rootId: string) {
   const root = createHierarchy(
     nodes.map((n, i) => ({
       id: n.id,
       parentId: n.parentId,
       index: i,
+      height: n.data.height,
     })),
     rootId
   );
@@ -78,4 +78,42 @@ export function treeLayout(nodes: Node[], rootId: string) {
     node.position.y = d.x - offsetX;
   });
   return newNodes;
+}
+
+
+export function customTreeLayout(nodes: Node[], rootId: string){
+  const root = createHierarchy(
+    nodes.map((n, i) => ({
+      id: n.id,
+      parentId: n.parentId,
+      index: i,
+      height: n.data.height,
+    })),
+    rootId
+  );
+
+  root.x = 0;
+  root.y = 0;
+  setLevelY(root);
+
+  const newNodes = [...nodes];
+  root.descendants().forEach((d) => {
+    const node = newNodes[d.data.index];
+    if(d.depth === 0) return; // keep the root not moved
+    node.position.x = d.x!;
+    node.position.y = d.y!;
+  })
+  // console.log(newNodes)
+  return newNodes;
+}
+
+export function setLevelY(root: d3.HierarchyNode<NodeData>){
+  let accumulatedY = 0;
+  root.children?.forEach(c => {
+    c.x = 350;
+    c.y = accumulatedY;
+    console.log(c.data.id, c.y, accumulatedY, c.data.height);
+    accumulatedY += 100 + c.data.height;
+    setLevelY(c);
+  })
 }
