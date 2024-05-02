@@ -60,7 +60,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
   }, [setNodeHeight, id]);
 
   return (
-    <div className="text-sm w-80 max-h-96	overflow-x-hidden pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
+    <div className="text-sm w-80 overflow-x-hidden pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
       <div>
         <div
           className={`flex justify-center w-full bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}
