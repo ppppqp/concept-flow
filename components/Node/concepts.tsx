@@ -20,9 +20,7 @@ export default function Concepts({id, concepts }: {id: string, concepts: string[
     <div className="flex justify-start items-center gap-0.5 select-text">
       <input
         onChange={(e) => {
-          console.log(e.target.value);
           setConcept(e.target.value);
-          setTimeout(()=>{console.log(nodes)}, 1)
         }}
         defaultValue={concepts.at(-1)}
         className="rounded px-1 text-center border border-transparent flex-wrap text-zinc-700 bg-transparent focus:outline-none focus:border focus:border-zinc-300 focus:bg-zinc-50"

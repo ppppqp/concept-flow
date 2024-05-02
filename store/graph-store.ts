@@ -80,6 +80,7 @@ const useStore = create<RFState>((set, get) => ({
     const nodes = get().nodes;
     const edges = get().edges;
     const newNodes = [...nodes];
+    const sourceNode = newNodes.find((n) => n.id === sourceId);
     newNodes.push({
       id: newNodeId,
       type: "node",
@@ -89,9 +90,8 @@ const useStore = create<RFState>((set, get) => ({
         x: Math.floor(Math.random() * 100),
         y: Math.floor(Math.random() * 100),
       },
-      data: { concepts: concepts, degree: 0, height: 0, },
+      data: { concepts: concepts, degree: 0, height: 0, depth: sourceNode?.data.depth + 1},
     });
-    const sourceNode = newNodes.find((n) => n.id === sourceId);
     if (sourceNode) {
       sourceNode.data.degree += 1;
     }

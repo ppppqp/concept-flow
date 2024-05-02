@@ -5,10 +5,27 @@ import { markdown } from "@/utils/markdown";
 import { Node } from "reactflow";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import Tool from "../Node/bottomTool";
+import Concepts from "../Node/concepts";
 const selector = (state: any) => ({
   nodes: state.nodes,
   removeNode: state.removeNode,
 });
+
+const titleSize = (depth: number) => {
+  console.log(depth)
+  if (depth < 6)
+    return [
+      "text-[20px]", // depth = 0
+      "text-[18px]", // depth = 1
+      "text-[16px]", // depth = 2
+      "text-[15px]", // depth = 3
+      "text-[14px]", // depth = 4
+      "text-[12px]", // depth = 5
+    ][depth];
+  else{
+    return 'text-[12px]';
+  }
+};
 
 export function Chunck({ id }: { id: string }) {
   const { nodes, removeNode } = useStore(useShallow(selector));
@@ -24,22 +41,27 @@ export function Chunck({ id }: { id: string }) {
   const node = useMemo(() => nodes.find((n: Node) => n.id === id), [nodes, id]);
   return (
     <div className="w-[32rem] relative">
-      <div className="flex items-center gap-2">
+      <div
+        className="flex items-center gap-2 border-b cursor-pointer hover:bg-zinc-50 px-2"
+        onClick={onFold}
+      >
         <XCircleIcon
-          className={"h-4 w-4 text-red-600 hover:text-red-500 cursor-pointer"}
+          className={"h-4 w-4 text-red-600 hover:text-red-500"}
           onClick={onRemove}
         />
         <h1
-          className="h-8 hover:text-blue-600 leading-8 cursor-pointer"
-          onClick={onFold}
+          className={`h-8 hover:text-blue-600 leading-8 ${titleSize(node.data.depth)}`}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
-          {node.data.concepts.at(-1)}
+          <Concepts id={id} concepts={node.data.concepts} />
         </h1>
       </div>
 
-      <div className={`overflow-hidden ${fold && "max-h-5"}`}>
+      <div className={`min-h-8 overflow-hidden ${fold && "max-h-10"}`}>
         {fold ? (
-          <div className="text-center">...</div>
+          <div className="text-center h-10">...</div>
         ) : (
           <div
             dangerouslySetInnerHTML={{ __html: markdown(node.data.content) }}
