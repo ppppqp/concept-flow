@@ -27,7 +27,7 @@ type RFState = {
   setNodeContent: (id: string, content: string | ((s: string) => void)) => void;
   addNode: (id: string, concepts?: string[]) => void;
   updateForceLayout: (nodes: Node[], edges: Edge[]) => void;
-  updateTreeLayout: (nodes: Node[], updatedNode?: string) => void;
+  updateTreeLayout: (nodes: Node[]) => void;
   setNodeHeight: (nodeId: string, height: number) => void;
 };
 
@@ -84,7 +84,6 @@ const useStore = create<RFState>((set, get) => ({
       id: newNodeId,
       type: "node",
       dragHandle: ".custom-drag-handle",
-      draggable: false,
       parentId: sourceId,
       position: {
         x: Math.floor(Math.random() * 100),
@@ -107,7 +106,7 @@ const useStore = create<RFState>((set, get) => ({
       edges: newEdges,
     });
     // await get().updateForceLayout(newNodes, newEdges);
-    get().updateTreeLayout(newNodes, sourceId);
+    get().updateTreeLayout(newNodes);
   },
   removeNode: async (targetId: string) => {
     if (targetId === ROOT_NODE_ID) {
@@ -153,9 +152,8 @@ const useStore = create<RFState>((set, get) => ({
       startTime = performance.now(); // Update start time for next iteration
     }
   },
-  updateTreeLayout: async (nodes: Node[], updatedNode?: string) => {
-    console.log('nodes inside updateTreeLayout', nodes);
-    const newNodes = customLayout(nodes, updatedNode || ROOT_NODE_ID, false);
+  updateTreeLayout: async (nodes: Node[]) => {
+    const newNodes = treeLayout(nodes, ROOT_NODE_ID);
     set({
       nodes: newNodes,
     });
@@ -164,7 +162,8 @@ const useStore = create<RFState>((set, get) => ({
     const newNodes = [...get().nodes];
     const updateNode = newNodes.find((n) => n.id === nodeId)!;
     updateNode.data.height = height;
-    get().updateTreeLayout(newNodes, updateNode.parentId || ROOT_NODE_ID);
+    // no update tree layout for now.
+    // get().updateTreeLayout(newNodes);
   },
 }));
 

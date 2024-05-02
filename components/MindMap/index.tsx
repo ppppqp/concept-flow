@@ -1,5 +1,11 @@
 "use client";
-import ReactFlow, { Controls, Background, MiniMap, Node, Edge } from "reactflow";
+import ReactFlow, {
+  Controls,
+  Background,
+  MiniMap,
+  Node,
+  Edge,
+} from "reactflow";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
 import TextNode from "../Node";
@@ -29,37 +35,19 @@ const uiSelector = (state: any) => ({
   setEditModalOpen: state.setEditModalOpen,
 });
 
-export default function MindMap({
-  height,
-  initialNodes,
-  initialEdges,
-}: {
-  height?: string;
-  initialNodes?: Node[];
-  initialEdges?: Edge[];
-}) {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes, setEdges } =
-    useStore(useShallow(selector));
+export default function MindMap({ height }: { height?: string }) {
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    setNodes,
+    setEdges,
+  } = useStore(useShallow(selector));
   const { editModalOpen, setEditModalOpen } = useUIStore(
     useShallow(uiSelector)
   );
-  useEffect(() => {
-    // init canvas
-    setNodes(
-      initialNodes ?? [
-        {
-          id: ROOT_NODE_ID,
-          type: "node",
-          position: { x: 0, y: 0 },
-          data: { content: "", concepts: ["Elasticsearch"], degree: 0 },
-          dragHandle: ".custom-drag-handle",
-          draggable: false,
-        },
-      ]
-    );
-    setEdges(initialEdges ??  []);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
-
 
   return (
     <div style={{ height: height ?? "95vh" }}>
@@ -76,6 +64,7 @@ export default function MindMap({
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        preventScrolling={false}
         fitView
         fitViewOptions={{ maxZoom: 1.2 }}
       >

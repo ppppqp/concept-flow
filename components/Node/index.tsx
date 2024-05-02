@@ -2,6 +2,9 @@ import { Handle, Position } from "reactflow";
 import Tool from "./bottomTool";
 import Content from "./content";
 import Concepts from "./concepts";
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
+
 import {
   XCircleIcon,
   ArrowsPointingOutIcon,
@@ -57,42 +60,33 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
       setNodeHeight(id, newHeight);
     });
     resizeObserver.observe(contentRef.current!);
+    return ()=>resizeObserver.disconnect();
   }, [setNodeHeight, id]);
 
   return (
-    <div className="text-sm w-80 overflow-x-hidden pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
+    <div className={`text-sm w-80 pb-4 rounded-xl bg-white border border-zinc-200 shadow-md`}>
       <div>
+        <div className="absolute left-1/2 translate-x-[-50%] top-1.5"><Concepts id={id} concepts={concepts} /></div>
         <div
-          className={`flex justify-center w-full bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}
+          onClick={onFold} 
+          className={`flex cursor-pointer justify-center w-full h-8 bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}
         >
           <div
             className={
-              "absolute left-2 h-4 flex justify-center items-center mr-2 gap-1"
+              "absolute left-2 h-4 top-2 flex justify-center items-center mr-2 gap-1"
             }
           >
             <XCircleIcon
               className={
-                "h-3 w-3 text-red-600 hover:text-red-500 cursor-pointer"
+                "h-4 w-4 text-red-600 hover:text-red-500 cursor-pointer"
               }
               onClick={onRemove}
             />
-            {fold ? (
-              <ArrowsPointingOutIcon
-                className="h-3 w-3 text-zinc-800 hover:text-zinc-700 cursor-pointer"
-                onClick={onFold}
-              />
-            ) : (
-              <ArrowsPointingInIcon
-                className="h-3 w-3 text-zinc-800 hover:text-zinc-700 cursor-pointer"
-                onClick={onFold}
-              />
-            )}
-            <Cog6ToothIcon
-              className="w-3 h-3 hover:text-zinc-700 cursor-pointer"
+            {/* <Cog6ToothIcon
+              className="w-4 h-4 hover:text-zinc-700 cursor-pointer"
               onClick={onEdit}
-            />
+            /> */}
           </div>
-          <Concepts concepts={concepts} />
           <div className="absolute right-2">
             <MinusIcon
               className={`h-4 w-4 animate-spin ${!loading && "invisible"}`}
@@ -100,7 +94,9 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
           </div>
         </div>
         <div className="p-2">
+          <SimpleBar style={{maxHeight: 200}}>
           <Content contentRef={contentRef} content={content} fold={fold} />
+          </SimpleBar>
         </div>
 
         <Tool

@@ -12,9 +12,10 @@ export const queryGoogle = async(query: string) => {
   params.append('q', query);
   const res = await fetch(GOOGLE_SEARCH_ENDPOINT + params.toString());
   const bodyJson = await res.json();
-  const items = bodyJson.items;
-  return items.map((item: any) => ({
-    snippet: item.snippet,
-    url: item.formattedUrl
-  })) as GoogleRespItem[];
+  // const items = bodyJson.items;
+  // return items.map((item: any) => ({
+  //   snippet: item.snippet,
+  //   url: item.formattedUrl
+  // })) as GoogleRespItem[];
+  return [];
 }

@@ -1,8 +1,10 @@
+"use client"
 import "./page.css";
 import { ROOT_NODE_ID } from "@/components/consts";
 import MindMap from "@/components/MindMap";
-import { useMemo } from "react";
-
+import { useMemo, useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
+import useStore from "@/store/graph-store";
 const introLine = `
 **Concept Flow** is an LGUI interaction paradigm that is aimed at **efficient systematic knowledge retrieval**.
 `;
@@ -40,7 +42,14 @@ const begForStarLine = `### Try it out☝️!
 Try out this paradigm in playground. Tell us how you feel by creating an issue in [Github](https://github.com/ppppqp/concept-flow/issues) or reach out on [Twitter](https://twitter.com/QipingP).
 Hope that it helps you (or amuses you🐶).
 `
+
+const selector = (state: any) => ({
+  setNodes: state.setNodes,
+  setEdges: state.setEdges,
+});
+
 export default function Home() {
+  const { setNodes, setEdges } = useStore(useShallow(selector));
   const initialNodes = useMemo(
     () => [
       {
@@ -100,6 +109,23 @@ export default function Home() {
     {id: 'link4', source: 'MindMap', target: 'RAG'},
     {id: 'link5', source: 'problems', target: 'Try'},
   ]), []);
+
+  useEffect(() => {
+    // init canvas
+    setNodes(
+      initialNodes ?? [
+        {
+          id: ROOT_NODE_ID,
+          type: "node",
+          position: { x: 0, y: 0 },
+          data: { content: "", concepts: ["Elasticsearch"], degree: 0 },
+          dragHandle: ".custom-drag-handle",
+          draggable: false,
+        },
+      ]
+    );
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
   return (
     <main>
       <h1 className="absolute text-4xl md:text-8xl text-zinc-700 text-center left-20 font-extralight italic">
@@ -109,7 +135,7 @@ export default function Home() {
         An LGUI interaction paradigm for systematic knowledge retrieval
       </span>
 
-      <MindMap initialNodes={initialNodes} initialEdges={initialEdges} />
+      <MindMap />
     </main>
   );
 }
