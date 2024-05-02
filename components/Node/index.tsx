@@ -11,7 +11,6 @@ import {
   ArrowsPointingInIcon,
   MinusIcon,
 } from "@heroicons/react/24/solid";
-import { Cog6ToothIcon, CogIcon } from "@heroicons/react/24/outline";
 import useStore from "../../store/graph-store";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -82,10 +81,6 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
               }
               onClick={onRemove}
             />
-            {/* <Cog6ToothIcon
-              className="w-4 h-4 hover:text-zinc-700 cursor-pointer"
-              onClick={onEdit}
-            /> */}
           </div>
           <div className="absolute right-2">
             <MinusIcon

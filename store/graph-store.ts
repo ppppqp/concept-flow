@@ -15,7 +15,7 @@ import {
 import { updateNodeLayout } from "@/utils/forceSimulation";
 import { ROOT_NODE_ID } from "../components/consts";
 import { uuid } from "uuidv4";
-import { treeLayout, customLayout} from "../utils/treeLayout";
+import { treeLayout, customLayout, documentLayout} from "../utils/treeLayout";
 type RFState = {
   nodes: Node[];
   edges: Edge[];
@@ -95,18 +95,20 @@ const useStore = create<RFState>((set, get) => ({
     if (sourceNode) {
       sourceNode.data.degree += 1;
     }
+
     const newEdges = [...edges];
     newEdges.push({
       id: uuid(),
       source: sourceId,
       target: newNodeId,
     });
+    
     // const forcedNode = updateNodeLayout(newNodes, newEdges);
     set({
       edges: newEdges,
     });
     // await get().updateForceLayout(newNodes, newEdges);
-    get().updateTreeLayout(newNodes);
+    get().updateTreeLayout(documentLayout(newNodes, ROOT_NODE_ID));
   },
   removeNode: async (targetId: string) => {
     if (targetId === ROOT_NODE_ID) {

@@ -5,6 +5,7 @@ import { useShallow } from "zustand/react/shallow";
 import useStore from "@/store/graph-store";
 
 import { ROOT_NODE_ID } from "@/components/consts";
+import Document from "@/components/Document";
 import Switch from "@/components/Switch";
 enum Mode {
   MindMap,
@@ -65,7 +66,7 @@ export default function Playground() {
       <Switch check={mode === Mode.MindMap} onToggle={(v)=>{setMode(v ? Mode.MindMap : Mode.Document)}} />
       {mode === Mode.MindMap ? 'Mind Map Mode' : 'Document Mode'}
       </div>
-      <MindMap />
+      {mode === Mode.MindMap ? <MindMap /> : <Document /> }
     </>
   );
 }

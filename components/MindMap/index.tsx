@@ -7,11 +7,8 @@ import ReactFlow, {
   Edge,
 } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
-import { useEffect } from "react";
 import TextNode from "../Node";
 import useStore from "@/store/graph-store";
-import { ROOT_NODE_ID } from "../consts";
-import * as d3 from "d3";
 import useUIStore from "@/store/ui-store";
 import EditNodeModal from "../Modal/EditNodeModal";
 const nodeTypes = {

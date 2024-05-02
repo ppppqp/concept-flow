@@ -2,13 +2,13 @@ import { ROOT_NODE_ID } from "@/components/consts";
 import * as d3 from "d3";
 import { Node, Edge } from "reactflow";
 
-interface FlatNodeData{
+interface FlatNodeData {
   id: string;
   index: number;
   parentId?: string; // root does not have parentId
   height: number;
 }
-interface NodeData extends FlatNodeData{
+interface NodeData extends FlatNodeData {
   children?: Array<NodeData>;
 }
 
@@ -19,7 +19,6 @@ interface NodeTreeData {
   y: number;
   depth: number;
 }
-
 
 function createHierarchy(nodesData: NodeData[], rootId: string) {
   const idMapping = nodesData.reduce((acc: Record<string, number>, el, i) => {
@@ -63,25 +62,23 @@ export function treeLayout(nodes: Node[], rootId: string) {
     return acc;
   }, {});
 
-
   // keep the root not moved
 
   descendants.forEach((d) => {
-    if(d.depth === 0) return; // keep the root not moved
+    if (d.depth === 0) return; // keep the root not moved
     const node = newNodes[d.data.index];
     // once we have parentId, the positiion computation in reactflow is different
     // the position coordinates become relative to parent's coordinate
     // we need to offset that in d3 output
-    const offsetX = node.parentId ?  descendants[idMapping[node.parentId]].x : 0;
-    const offsetY = node.parentId ?  descendants[idMapping[node.parentId]].y : 0;
+    const offsetX = node.parentId ? descendants[idMapping[node.parentId]].x : 0;
+    const offsetY = node.parentId ? descendants[idMapping[node.parentId]].y : 0;
     node.position.x = d.y - offsetY;
     node.position.y = d.x - offsetX;
   });
   return newNodes;
 }
 
-
-export function customLayout(nodes: Node[], rootId: string){
+export function customLayout(nodes: Node[], rootId: string) {
   const root = createHierarchy(
     nodes.map((n, i) => ({
       id: n.id,
@@ -99,24 +96,52 @@ export function customLayout(nodes: Node[], rootId: string){
   const newNodes = [...nodes];
   root.descendants().forEach((d) => {
     const node = newNodes[d.data.index];
-    if(d.depth === 0) return; // keep the root not moved
+    if (d.depth === 0) return; // keep the root not moved
     node.position.x = d.x!;
     node.position.y = d.y!;
-  })
+  });
   // console.log(newNodes)
   return newNodes;
 }
 
-export function setLevelY(root: d3.HierarchyNode<NodeData>){
+export function setLevelY(root: d3.HierarchyNode<NodeData>) {
   let accumulatedY = 0;
-  root.children?.forEach(c => {
+  root.children?.forEach((c) => {
     c.x = 350;
     c.y = accumulatedY;
     accumulatedY += 100 + c.data.height;
     setLevelY(c);
-  })
+  });
 }
 
+export function documentLayout(nodes: Node[], rootId: string) {
+  const root = createHierarchy(
+    nodes.map((n, i) => ({
+      id: n.id,
+      parentId: n.parentId,
+      index: i,
+      height: n.data.height,
+    })),
+    rootId
+  );
+  const flatten = [] as string[];
+  traverse(root, flatten);
+  const newNodes = [...nodes];
+
+  const idMapping = flatten.reduce((acc: Record<string, number>, el, i) => {
+    acc[el] = i;
+    return acc;
+  }, {});
+  newNodes.sort((a, b) => idMapping[a.id] - idMapping[b.id]);
+  return newNodes;
+}
+
+function traverse(root: d3.HierarchyNode<NodeData>, flatten: string[]) {
+  flatten.push(root.data.id);
+  root.children?.forEach((c) => {
+    traverse(c, flatten);
+  });
+}
 
 // export function setDocumentY(root: d3.HierarchyNode<NodeData>){
 //   let accumulatedY = root.data.height + 100;
