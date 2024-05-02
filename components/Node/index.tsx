@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Cog6ToothIcon, CogIcon } from "@heroicons/react/24/outline";
 import useStore from "../../store/graph-store";
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useUIStore from "@/store/ui-store";
 export interface NodeData {
@@ -41,14 +41,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
   );
   const onFold = useCallback(() => {
     setFold((f) => !f);
-    setTimeout(
-      () => {
-        const height = contentRef?.current?.clientHeight;
-        setNodeHeight(id, height);
-      },
-      1
-    );
-  }, [id, setNodeHeight]);
+  }, []);
   const onRemove = useCallback(async () => {
     removeNode(id);
   }, [removeNode, id]);
@@ -56,8 +49,18 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
     () => setEditModalOpen(true, id),
     [setEditModalOpen, id]
   );
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      const newHeight = entry.contentRect.height; // Access the new element height
+      setNodeHeight(id, newHeight);
+    });
+    resizeObserver.observe(contentRef.current!);
+  }, [setNodeHeight, id]);
+
   return (
-    <div className="text-sm w-80 pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
+    <div className="text-sm w-80 max-h-96	overflow-x-hidden pb-4 rounded-xl bg-white border border-zinc-200 backdrop-blur-sm bg-[rgba(255, 255, 255, 0.5)] shadow-md">
       <div>
         <div
           className={`flex justify-center w-full bg-zinc-100 p-1 pl-2 pr-2 border-b border-zinc-200 rounded-t-xl  custom-drag-handle`}

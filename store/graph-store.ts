@@ -15,7 +15,7 @@ import {
 import { updateNodeLayout } from "@/utils/forceSimulation";
 import { ROOT_NODE_ID } from "../components/consts";
 import { uuid } from "uuidv4";
-import { treeLayout, customTreeLayout} from "../utils/treeLayout";
+import { treeLayout, customLayout} from "../utils/treeLayout";
 type RFState = {
   nodes: Node[];
   edges: Edge[];
@@ -155,7 +155,7 @@ const useStore = create<RFState>((set, get) => ({
   },
   updateTreeLayout: async (nodes: Node[], updatedNode?: string) => {
     console.log('nodes inside updateTreeLayout', nodes);
-    const newNodes = customTreeLayout(nodes, updatedNode || ROOT_NODE_ID);
+    const newNodes = customLayout(nodes, updatedNode || ROOT_NODE_ID, false);
     set({
       nodes: newNodes,
     });

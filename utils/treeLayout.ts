@@ -81,7 +81,7 @@ export function treeLayout(nodes: Node[], rootId: string) {
 }
 
 
-export function customTreeLayout(nodes: Node[], rootId: string){
+export function customLayout(nodes: Node[], rootId: string, tree: boolean){
   const root = createHierarchy(
     nodes.map((n, i) => ({
       id: n.id,
@@ -94,7 +94,11 @@ export function customTreeLayout(nodes: Node[], rootId: string){
 
   root.x = 0;
   root.y = 0;
-  setLevelY(root);
+  if(tree){
+    setLevelY(root);
+  } else{
+    setDocumentY(root);
+  }
 
   const newNodes = [...nodes];
   root.descendants().forEach((d) => {
@@ -111,6 +115,18 @@ export function setLevelY(root: d3.HierarchyNode<NodeData>){
   let accumulatedY = 0;
   root.children?.forEach(c => {
     c.x = 350;
+    c.y = accumulatedY;
+    console.log(c.data.id, c.y, accumulatedY, c.data.height);
+    accumulatedY += 100 + c.data.height;
+    setLevelY(c);
+  })
+}
+
+
+export function setDocumentY(root: d3.HierarchyNode<NodeData>){
+  let accumulatedY = root.data.height + 100;
+  root.children?.forEach(c => {
+    c.x = 0;
     c.y = accumulatedY;
     console.log(c.data.id, c.y, accumulatedY, c.data.height);
     accumulatedY += 100 + c.data.height;
