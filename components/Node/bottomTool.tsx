@@ -13,7 +13,6 @@ import { Endpoints } from "@/utils/makeRegQuery";
 const toolClassName =
   "h-4 w-4 rounded cursor-pointer flex justify-center items-center m-1";
 const selector = (state: any) => ({
-  save: state.save,
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
   removeNode: state.removeNode,
@@ -32,7 +31,7 @@ export default function Tool({
   content: string;
   setLoading: (b: boolean) => void;
 }) {
-  const { addNode, setNodeContent, removeNode, save } = useStore(useShallow(selector));
+  const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
   const onAddNode = useCallback(() => {
     addNode(id, [...concepts, 'Enter your concept']);
   }, [concepts, id, addNode]);
@@ -44,8 +43,7 @@ export default function Tool({
       await addNode(id, [...concepts, concept]);
     }
     setLoading(false);
-    save()
-  }, [addNode, concepts, id, setLoading, save]);
+  }, [addNode, concepts, id, setLoading]);
   const onSpark = useCallback(async ()=>{
     setLoading(true);
     const stream: ReadableStream = await makeRegQuery(Endpoints.SPARK, {concepts}, true);

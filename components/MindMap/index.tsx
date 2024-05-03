@@ -45,7 +45,6 @@ export default function MindMap({ height }: { height?: string }) {
   const { editModalOpen, setEditModalOpen } = useUIStore(
     useShallow(uiSelector)
   );
-
   return (
     <div style={{ height: height ?? "95vh" }}>
       <EditNodeModal

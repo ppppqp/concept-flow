@@ -28,6 +28,7 @@ const uiSelector = (state: any) => ({
 });
 
 export default function TextNode({ data, id }: { data: NodeData; id: string }) {
+
   const { content, concepts } = data;
   const { removeNode, setNodeHeight } = useStore(useShallow(selector));
   const [fold, setFold] = useState(false);

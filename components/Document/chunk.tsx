@@ -12,7 +12,6 @@ const selector = (state: any) => ({
 });
 
 const titleSize = (depth: number) => {
-  console.log(depth)
   if (depth < 6)
     return [
       "text-[20px]", // depth = 0
@@ -35,7 +34,6 @@ export function Chunck({ id }: { id: string }) {
     removeNode(id);
   }, [removeNode, id]);
   const onFold = useCallback(() => {
-    console.log("fold");
     setFold((f) => !f);
   }, []);
   const node = useMemo(() => nodes.find((n: Node) => n.id === id), [nodes, id]);

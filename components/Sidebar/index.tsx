@@ -1,7 +1,21 @@
 import React, { useState } from "react";
-import { ChevronDoubleRightIcon} from "@heroicons/react/24/solid";
+import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
+import useUIStore, { Session } from "@/store/ui-store";
+import { useShallow } from "zustand/react/shallow";
+import useStore from "@/store/graph-store";
+import { loadLocalStorage } from "@/utils/localStorage";
+const uiSelector = (state: any) => ({
+  sessions: state.sessions,
+  setCurrentSessionId: state.setCurrentSessionId
+});
+const selector = (state: any) => ({
+  setNodes: state.setNodes,
+  setEdges: state.setEdges,
+});
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true); // State to manage the open/close state of the sidebar
+  const [isOpen, setIsOpen] = useState(false);
+  const { sessions, setCurrentSessionId } = useUIStore(useShallow(uiSelector));
+  const { setNodes, setEdges } = useStore(useShallow(selector));
 
   return (
     <>
@@ -14,13 +28,27 @@ const Sidebar = () => {
             isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <button
-            className="text-zinc-700 ml-2"
-            onClick={() => setIsOpen(!isOpen)}
-          >
+          <button className="text-zinc-700" onClick={() => setIsOpen(!isOpen)}>
             Close
           </button>
-          <nav>{/* Navigation items */}</nav>
+
+          <div className="mt-4">Past Sessions</div>
+          <nav className="mt-8">
+            {sessions.map((session: Session) => (
+              <div
+                key={session.sessionId}
+                className="hover:bg-zinc-100 rounded py-2 px-4 cursor-pointer"
+                onClick={() => {
+                  const { nodes, edges } = loadLocalStorage(session.sessionId)!;
+                  setCurrentSessionId(session.sessionId);
+                  setNodes(nodes);
+                  setEdges(edges);
+                }}
+              >
+                {session.concept}
+              </div>
+            ))}
+          </nav>
         </div>
       </div>
     </>
