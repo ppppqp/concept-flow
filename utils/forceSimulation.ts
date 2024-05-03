@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {Node, Edge} from 'reactflow';
+import {Node, Edge} from '@/types/node';
 interface NodeType { x: number; y: number; id: string };
 export function* forceDirectedLayout(nodes: NodeType[], links: { source: string, target: string }[]) {
   // Spring constant for link forces

@@ -2,7 +2,7 @@ import useStore from "@/store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { useMemo, useState, useCallback } from "react";
 import { markdown } from "@/utils/markdown";
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import Tool from "../Node/bottomTool";
 import Concepts from "../Node/concepts";

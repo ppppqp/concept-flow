@@ -1,4 +1,4 @@
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 
 // parse dataset to string
 

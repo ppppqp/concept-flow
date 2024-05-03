@@ -1,7 +1,7 @@
 import useStore from "@/store/graph-store";
 import { useCallback, useMemo, useState } from "react";
 import useUIStore from "@/store/ui-store";
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 import { useShallow } from "zustand/react/shallow";
 const selector = (state: any) => ({
   sessionId: state.sessionId,

@@ -1,6 +1,6 @@
 import { ROOT_NODE_ID } from "@/components/consts";
 import { useMemo } from "react";
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 export default function useConcepts(id: string, nodes: Node[]){
   const concepts = useMemo(() => {
     const node = nodes.find(n => n.id === id)!;

@@ -1,7 +1,7 @@
 import Modal from ".";
 import useStore from "@/store/graph-store";
 import useUIStore from "@/store/ui-store";
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 import { useShallow } from "zustand/react/shallow";
 import { useCallback, useState, useMemo } from "react";
 import useConcepts from "@/hooks/useConcepts";

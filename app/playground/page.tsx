@@ -1,6 +1,6 @@
 "use client";
 import MindMap from "@/components/MindMap";
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 import { useMemo, useState, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/store/graph-store";

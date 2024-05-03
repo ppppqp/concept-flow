@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/store/graph-store";
-import { Node } from "reactflow";
+import { Node } from '@/types/node';
 import { Chunck } from "./chunk";
 const selector = (state: any) => ({
   nodes: state.nodes,
