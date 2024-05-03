@@ -10,12 +10,14 @@ import useStore from "../../store/graph-store";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useUIStore from "@/store/ui-store";
+import useConcepts from "@/hooks/useConcepts";
 export interface NodeData {
   content: string;
-  concepts: string[];
+  concept: string;
   degree: number;
 }
 const selector = (state: any) => ({
+  nodes: state.nodes,
   setNodeHeight: state.setNodeHeight,
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
@@ -29,8 +31,8 @@ const uiSelector = (state: any) => ({
 
 export default function TextNode({ data, id }: { data: NodeData; id: string }) {
 
-  const { content, concepts } = data;
-  const { removeNode, setNodeHeight } = useStore(useShallow(selector));
+  const { content, concept } = data;
+  const { removeNode, setNodeHeight, nodes } = useStore(useShallow(selector));
   const [fold, setFold] = useState(false);
   const [loading, setLoading] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
     () => setEditModalOpen(true, id),
     [setEditModalOpen, id]
   );
-
+  const concepts = useConcepts(id, nodes);
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0];
@@ -64,7 +66,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
     >
       <div>
         <div className="absolute left-1/2 translate-x-[-50%] top-1.5">
-          <Concepts id={id} concepts={concepts} />
+          <Concepts id={id} concept={concept} />
         </div>
         <div
           onClick={onFold}

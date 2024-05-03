@@ -11,6 +11,7 @@ import Switch from "@/components/Switch";
 import Sidebar from "@/components/Sidebar";
 import { saveLocalStorage } from "@/utils/localStorage";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
+import { nodesToString } from "@/utils/toString";
 enum Mode {
   MindMap,
   Document,
@@ -43,10 +44,10 @@ Then click the <span style="color: #e1a107">yellow spark</span> button to explor
 `;
 export default function Playground() {
   const [mode, setMode] = useState(Mode.MindMap);
-  const { setNodes, setEdges, nodes, edges } = useStore(
-    useShallow(selector)
+  const { setNodes, setEdges, nodes, edges } = useStore(useShallow(selector));
+  const { sessions, setSessions, currentSessionId } = useUIStore(
+    useShallow(uiSelector)
   );
-  const { sessions, setSessions, currentSessionId } = useUIStore(useShallow(uiSelector));
   const initialNodes = useMemo(
     () => [
       {
@@ -55,7 +56,7 @@ export default function Playground() {
         position: { x: 0, y: 0 },
         data: {
           content: guide,
-          concepts: ["Trip to New York"],
+          concept: "Trip to New York",
           degree: 0,
           depth: 0,
         },
@@ -87,23 +88,30 @@ export default function Playground() {
         <div
           className="w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded"
           onClick={() => {
-            const concept = nodes.find((n: Node) => n.id === ROOT_NODE_ID)?.data
-              .concepts[0];
+            const concept = nodes.find((n: Node) => n.id === ROOT_NODE_ID)?.data.concept;
             saveLocalStorage(currentSessionId, concept, nodes, edges);
             // update sidebar synchrounously
-            const index = sessions.findIndex((s: Session) => s.sessionId === currentSessionId);
-            if(index !== -1){
+            const index = sessions.findIndex(
+              (s: Session) => s.sessionId === currentSessionId
+            );
+            if (index !== -1) {
               // existing session
               // move to front
               const newSessions = [...sessions];
               const currentSession = sessions[index];
+              // update concept
+              currentSession.concept = concept;
               newSessions.splice(index, 1);
               newSessions.unshift(currentSession);
               setSessions(newSessions);
-            } else{
+            } else {
               // new session
-              const newSessions = [...sessions]
-              newSessions.unshift({currentSessionId, concept, time: Date.now()});
+              const newSessions = [...sessions];
+              newSessions.unshift({
+                currentSessionId,
+                concept,
+                time: Date.now(),
+              });
               setSessions(newSessions);
             }
             // set;
@@ -114,7 +122,12 @@ export default function Playground() {
         <div className="w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded">
           Export to PDF
         </div>
-        <div className="w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded">
+        <div
+          className="w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded"
+          onClick={() => {
+            navigator.clipboard.writeText(nodesToString(nodes))
+          }}
+        >
           Clipboard
         </div>
       </div>

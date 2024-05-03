@@ -47,12 +47,12 @@ export default function MindMap({ height }: { height?: string }) {
   );
   return (
     <div style={{ height: height ?? "95vh" }}>
-      <EditNodeModal
+      {/* <EditNodeModal
         isOpen={editModalOpen}
         onClose={() => {
           setEditModalOpen(false);
         }}
-      />
+      /> */}
       <ReactFlow
         nodes={nodes}
         edges={edges}

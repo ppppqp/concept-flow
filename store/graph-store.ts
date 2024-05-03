@@ -26,8 +26,7 @@ type RFState = {
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
   setNodeContent: (id: string, content: string | ((s: string) => void)) => void;
-  addNode: (id: string, concepts?: string[]) => void;
-  updateForceLayout: (nodes: Node[], edges: Edge[]) => void;
+  addNode: (id: string, concept?: string) => void;
   updateTreeLayout: (nodes: Node[]) => void;
   setNodeHeight: (nodeId: string, height: number) => void;
 };
@@ -76,7 +75,7 @@ const useStore = create<RFState>((set, get) => ({
       }),
     });
   },
-  addNode: async (sourceId: string, concepts = ["Enter your concepts"]) => {
+  addNode: async (sourceId: string, concept = "Enter your concept") => {
     const newNodeId = uuid();
     const nodes = get().nodes;
     const edges = get().edges;
@@ -91,7 +90,7 @@ const useStore = create<RFState>((set, get) => ({
         x: Math.floor(Math.random() * 100),
         y: Math.floor(Math.random() * 100),
       },
-      data: { concepts: concepts, degree: 0, height: 0, depth: sourceNode?.data.depth + 1},
+      data: { concept: concept, degree: 0, height: 0, depth: sourceNode?.data.depth + 1},
     });
     if (sourceNode) {
       sourceNode.data.degree += 1;

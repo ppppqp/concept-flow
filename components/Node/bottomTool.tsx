@@ -33,14 +33,14 @@ export default function Tool({
 }) {
   const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
   const onAddNode = useCallback(() => {
-    addNode(id, [...concepts, 'Enter your concept']);
-  }, [concepts, id, addNode]);
+    addNode(id);
+  }, [id, addNode]);
   const onSpan = useCallback(async ()=>{
     setLoading(true);
     const data = await makeRegQuery(Endpoints.SPAN, {concepts}, false);
     const newConcepts = data.split(",");
     for await (const concept of newConcepts) {
-      await addNode(id, [...concepts, concept]);
+      await addNode(id, concept);
     }
     setLoading(false);
   }, [addNode, concepts, id, setLoading]);

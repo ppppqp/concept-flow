@@ -10,10 +10,10 @@ const selector = (state: any) => ({
 });
 export default function Concepts({
   id,
-  concepts,
+  concept,
 }: {
   id: string;
-  concepts: string[];
+  concept: string;
 }) {
   const { nodes, setNodes } = useStore(useShallow(selector));
   const setConcept = useCallback(
@@ -21,7 +21,7 @@ export default function Concepts({
       const newNodes = [...nodes];
       const node = newNodes.find((n: Node) => n.id === id);
       if (node) {
-        node.data.concepts[node.data.concepts.length - 1] = concept;
+        node.data.concept = concept;
       }
       setNodes(newNodes);
     },
@@ -31,7 +31,7 @@ export default function Concepts({
   return (
     <div className="flex justify-start items-center gap-0.5 select-text">
       <input
-        value={concepts.at(-1)}
+        value={concept}
         onChange={(e) => {
           setConcept(e.target.value);
         }}

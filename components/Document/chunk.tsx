@@ -6,6 +6,7 @@ import { Node } from "reactflow";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import Tool from "../Node/bottomTool";
 import Concepts from "../Node/concepts";
+import useConcepts from "@/hooks/useConcepts";
 const selector = (state: any) => ({
   nodes: state.nodes,
   removeNode: state.removeNode,
@@ -30,6 +31,7 @@ export function Chunck({ id }: { id: string }) {
   const { nodes, removeNode } = useStore(useShallow(selector));
   const [fold, setFold] = useState(false);
   const [loading, setLoading] = useState(false);
+  const concepts = useConcepts(id, nodes);
   const onRemove = useCallback(async () => {
     removeNode(id);
   }, [removeNode, id]);
@@ -53,7 +55,7 @@ export function Chunck({ id }: { id: string }) {
             e.stopPropagation();
           }}
         >
-          <Concepts id={id} concepts={node.data.concepts} />
+          <Concepts id={id} concept={node.data.concept} />
         </h1>
       </div>
 
@@ -70,7 +72,7 @@ export function Chunck({ id }: { id: string }) {
 
       <Tool
         id={id}
-        concepts={node.data.concepts}
+        concepts={concepts}
         content={node.data.content}
         setLoading={setLoading}
       />
