@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import useUIStore, { UIStoreState } from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
@@ -14,23 +14,36 @@ import { uuid } from "uuidv4";
 
 const sessionSelector = (state: SessionStoreState) => ({
   sessions: state.sessions,
-  setSessions: state.setSessions,
   currentSessionId: state.currentSessionId,
-  setCurrentSessionId: state.setCurrentSessionId,
 });
-const selector = (state: GraphStoreState) => ({
-  setNodes: state.setNodes,
-  setEdges: state.setEdges,
-});
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { sessions, currentSessionId, setCurrentSessionId, setSessions } =
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const { sessions, currentSessionId } =
     useSessionStore(useShallow(sessionSelector));
-  const { setNodes, setEdges } = useGraphStore(useShallow(selector));
   const { loadSession, removeSession, addSession } = useSessionControl();
+  useEffect(() => {
+    function handleOutsideClick(e: any) {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+        // Clicked outside the sidebar
+        setIsOpen(false);
+      }
+    }
+
+    // Only add the listener if the sidebar is open
+    if (isOpen) {
+      document.addEventListener('click', handleOutsideClick);
+    }
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [isOpen]); // Only re-run the effect if the isOpen state changes
   return (
-    <>
-      <button className="text-zinc-700 ml-2" onClick={() => setIsOpen(!isOpen)}>
+    <div ref={sidebarRef}>
+      <button className="text-zinc-700 ml-2" onClick={() => setIsOpen(!isOpen)} >
         <ChevronDoubleRightIcon className="h-5 w-5" />
       </button>
       <div className="flex">
@@ -75,7 +88,7 @@ const Sidebar = () => {
           </nav>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -64,7 +64,7 @@ export default function Playground() {
       <div className="absolute left-0 flex text-base gap-2 z-40">
         <Sidebar />
       </div>
-      <div className="absolute text-base right-8 flex gap-2 flex-col z-30">
+      <div className="absolute text-base right-8 flex gap-2 flex-col z-30 items-end">
         <div className="flex gap-2">
           {mode === Mode.MindMap ? "Mind Map Mode" : "Document Mode"}
           <Switch
@@ -81,9 +81,6 @@ export default function Playground() {
           }}
         >
           Save to browser
-        </div>
-        <div className={buttonClass}>
-          Export to PDF
         </div>
         <div
           className={buttonClass}
