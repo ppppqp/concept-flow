@@ -24,7 +24,7 @@ const getKey = (sessionId: string) => `concept-flow%${sessionId}`;
 
 export function loadLocalStorage(sessionId: string) {
   if(typeof localStorage === 'undefined'){
-    return {concept: DEFAULT_CONCEPT, time: Date.now()};
+    return {concept: DEFAULT_CONCEPT, time: Date.now(), nodes: [], edges: []};
   }
   const result = localStorage.getItem(getKey(sessionId));
   try {
