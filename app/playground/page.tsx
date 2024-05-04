@@ -3,7 +3,7 @@ import MindMap from "@/components/MindMap";
 import { Node } from "@/types/node";
 import { useMemo, useState, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import useUIStore from "@/store/ui-store";
 import Document from "@/components/Document";
 import Switch from "@/components/Switch";
@@ -39,7 +39,7 @@ const sessionSelector = (state: any) => ({
 
 export default function Playground() {
   const [mode, setMode] = useState(Mode.MindMap);
-  const { setNodes, setEdges, nodes, edges } = useStore(useShallow(selector));
+  const { setNodes, setEdges, nodes, edges } = useGraphStore(useShallow(selector));
   const { setPopoverNoticeMessage, setShowPopoverNotice } = useUIStore(
     useShallow(uiSelector)
   );

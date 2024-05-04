@@ -17,7 +17,7 @@ import { saveLocalStorage } from "@/utils/localStorage";
 import { ROOT_NODE_ID } from "../components/consts";
 import { uuid } from "uuidv4";
 import { treeLayout, customLayout, documentLayout} from "../utils/treeLayout";
-type RFState = {
+type GraphStoreState = {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
@@ -31,8 +31,8 @@ type RFState = {
   setNodeHeight: (nodeId: string, height: number) => void;
 };
 
-// this is our useStore hook that we can use in our components to get parts of the store and call actions
-const useStore = create<RFState>((set, get) => ({
+// this is our useGraphStore hook that we can use in our components to get parts of the store and call actions
+const useGraphStore = create<GraphStoreState>((set, get) => ({
   nodes: [],
   edges: [],
   onNodesChange: (changes: NodeChange[]) => {
@@ -169,4 +169,4 @@ const useStore = create<RFState>((set, get) => ({
   }
 }));
 
-export default useStore;
+export default useGraphStore;

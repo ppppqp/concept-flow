@@ -1,5 +1,5 @@
 import Modal from ".";
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import useUIStore from "@/store/ui-store";
 import { Node } from '@/types/node';
 import { useShallow } from "zustand/react/shallow";
@@ -19,7 +19,7 @@ export default function EditNodeModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { nodes, setNodes } = useStore(useShallow(selector));
+  const { nodes, setNodes } = useGraphStore(useShallow(selector));
   const { editModalNodeId } = useUIStore(useShallow(uiSelector));
   const concepts = useConcepts(editModalNodeId, nodes);
   const concept = useMemo(

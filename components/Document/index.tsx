@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import { Node } from '@/types/node';
 import { Chunck } from "./chunk";
 const selector = (state: any) => ({
@@ -23,7 +23,7 @@ export default function Document() {
     onConnect,
     setNodes,
     setEdges,
-  } = useStore(useShallow(selector));
+  } = useGraphStore(useShallow(selector));
 
   return (
     <div className="flex flex-col gap-2 items-center pb-24 overflow-y-auto" style={{ height: "95vh" }}>

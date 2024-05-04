@@ -8,7 +8,7 @@ import ReactFlow, {
 } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
 import TextNode from "../Node";
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import useUIStore from "@/store/ui-store";
 import EditNodeModal from "../Modal/EditNodeModal";
 const nodeTypes = {
@@ -41,7 +41,7 @@ export default function MindMap({ height }: { height?: string }) {
     onConnect,
     setNodes,
     setEdges,
-  } = useStore(useShallow(selector));
+  } = useGraphStore(useShallow(selector));
   const { editModalOpen, setEditModalOpen } = useUIStore(
     useShallow(uiSelector)
   );

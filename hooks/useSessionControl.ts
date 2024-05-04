@@ -1,4 +1,4 @@
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import useUIStore from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
 import { useCallback } from "react";
@@ -29,7 +29,7 @@ const uiSelector = (state: any) => ({
   setPopoverNoticeMessage: state.setPopoverNoticeMessage,
 });
 export function useSessionControl() {
-  const { nodes, edges, setNodes, setEdges } = useStore(useShallow(selector));
+  const { nodes, edges, setNodes, setEdges } = useGraphStore(useShallow(selector));
   const { currentSessionId, setCurrentSessionId, sessions, setSessions } =
     useSessionStore(sessionSelector);
   const { setPopoverNoticeMessage, setShowPopoverNotice } = useUIStore(

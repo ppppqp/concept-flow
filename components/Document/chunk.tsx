@@ -1,4 +1,4 @@
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { useMemo, useState, useCallback } from "react";
 import { markdown } from "@/utils/markdown";
@@ -28,7 +28,7 @@ const titleSize = (depth: number) => {
 };
 
 export function Chunck({ id }: { id: string }) {
-  const { nodes, removeNode } = useStore(useShallow(selector));
+  const { nodes, removeNode } = useGraphStore(useShallow(selector));
   const [fold, setFold] = useState(false);
   const [loading, setLoading] = useState(false);
   const concepts = useConcepts(id, nodes);

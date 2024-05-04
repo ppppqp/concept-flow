@@ -5,7 +5,7 @@ import {
   CubeIcon
 } from "@heroicons/react/24/outline";
 import { useCallback } from "react";
-import useStore from "../../store/graph-store";
+import useGraphStore from "../../store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
 import { Endpoints } from "@/utils/makeRegQuery";
@@ -31,7 +31,7 @@ export default function Tool({
   content: string;
   setLoading: (b: boolean) => void;
 }) {
-  const { addNode, setNodeContent, removeNode } = useStore(useShallow(selector));
+  const { addNode, setNodeContent, removeNode } = useGraphStore(useShallow(selector));
   const onAddNode = useCallback(() => {
     addNode(id);
   }, [id, addNode]);

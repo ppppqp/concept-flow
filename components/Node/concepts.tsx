@@ -1,4 +1,4 @@
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import { useCallback, useMemo, useState } from "react";
 import useUIStore from "@/store/ui-store";
 import { Node } from '@/types/node';
@@ -15,7 +15,7 @@ export default function Concepts({
   id: string;
   concept: string;
 }) {
-  const { nodes, setNodes } = useStore(useShallow(selector));
+  const { nodes, setNodes } = useGraphStore(useShallow(selector));
   const setConcept = useCallback(
     (concept: string) => {
       const newNodes = [...nodes];

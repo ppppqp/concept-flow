@@ -4,7 +4,7 @@ import { ROOT_NODE_ID } from "@/components/consts";
 import MindMap from "@/components/MindMap";
 import { useMemo, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 const introLine = `
 **Concept Flow** is an LGUI interaction paradigm that is aimed at **efficient systematic knowledge retrieval**.
 `;
@@ -49,7 +49,7 @@ const selector = (state: any) => ({
 });
 
 export default function Home() {
-  const { setNodes, setEdges } = useStore(useShallow(selector));
+  const { setNodes, setEdges } = useGraphStore(useShallow(selector));
   const initialNodes = useMemo(
     () => [
       {

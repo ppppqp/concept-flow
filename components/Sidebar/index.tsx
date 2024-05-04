@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import useUIStore, { Session } from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
-import useStore from "@/store/graph-store";
+import useGraphStore from "@/store/graph-store";
 import { loadLocalStorage, removeLocalStorage } from "@/utils/localStorage";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 
@@ -20,7 +20,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { sessions, currentSessionId, setCurrentSessionId, setSessions } =
     useUIStore(useShallow(uiSelector));
-  const { setNodes, setEdges } = useStore(useShallow(selector));
+  const { setNodes, setEdges } = useGraphStore(useShallow(selector));
   const loadSession = useCallback((sessionId: string) => {
     const { nodes, edges } = loadLocalStorage(sessionId)!;
     setCurrentSessionId(sessionId);

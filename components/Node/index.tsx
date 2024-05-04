@@ -6,7 +6,7 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
 import { XCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
-import useStore from "../../store/graph-store";
+import useGraphStore from "../../store/graph-store";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useUIStore from "@/store/ui-store";
@@ -28,7 +28,7 @@ const uiSelector = (state: any) => ({
 export default function TextNode({ data, id }: { data: NodeData; id: string }) {
 
   const { content, concept } = data;
-  const { removeNode, setNodeHeight, nodes } = useStore(useShallow(selector));
+  const { removeNode, setNodeHeight, nodes } = useGraphStore(useShallow(selector));
   const [fold, setFold] = useState(false);
   const [loading, setLoading] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
