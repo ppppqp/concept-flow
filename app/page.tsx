@@ -4,7 +4,7 @@ import { ROOT_NODE_ID } from "@/components/consts";
 import MindMap from "@/components/MindMap";
 import { useMemo, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import useGraphStore from "@/store/graph-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 const introLine = `
 **Concept Flow** is an LGUI interaction paradigm that is aimed at **efficient systematic knowledge retrieval**.
 `;
@@ -43,7 +43,7 @@ Try out this paradigm in playground. Tell us how you feel by creating an issue i
 Hope that it helps you (or amuses you🐶).
 `
 
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });

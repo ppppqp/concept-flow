@@ -3,8 +3,8 @@ import MindMap from "@/components/MindMap";
 import { Node } from "@/types/node";
 import { useMemo, useState, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import useGraphStore from "@/store/graph-store";
-import useUIStore from "@/store/ui-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import Document from "@/components/Document";
 import Switch from "@/components/Switch";
 import Sidebar from "@/components/Sidebar";;
@@ -12,25 +12,25 @@ import { nodesToString } from "@/utils/toString";
 import PopoverNotice from "@/components/PopoverNotice";
 import { useSessionControl } from "@/hooks/useSessionControl";
 import { uuid } from "uuidv4";
-import useSessionStore from "@/store/session-store";
+import useSessionStore, { SessionStoreState } from "@/store/session-store";
 enum Mode {
   MindMap,
   Document,
 }
 
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   edges: state.edges,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });
 
-const uiSelector = (state: any) => ({
+const uiSelector = (state: UIStoreState) => ({
   setShowPopoverNotice: state.setShowPopoverNotice,
   setPopoverNoticeMessage: state.setPopoverNoticeMessage,
 });
 
-const sessionSelector = (state: any) => ({
+const sessionSelector = (state: SessionStoreState) => ({
   sessions: state.sessions,
   setSessions: state.setSessions,
   currentSessionId: state.currentSessionId,

@@ -1,8 +1,8 @@
 import { useShallow } from "zustand/react/shallow";
-import useGraphStore from "@/store/graph-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 import { Node } from '@/types/node';
 import { Chunck } from "./chunk";
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,
@@ -10,8 +10,6 @@ const selector = (state: any) => ({
   onConnect: state.onConnect,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
-  editModalOpen: state.editModalOpen,
-  setEditModalOpen: state.setEditModalOpen,
 });
 
 export default function Document() {

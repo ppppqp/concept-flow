@@ -1,5 +1,5 @@
-import useGraphStore from "@/store/graph-store";
-import useUIStore from "@/store/ui-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
 import { useCallback } from "react";
 import { Node } from "@/types/node";
@@ -9,22 +9,22 @@ import {
   ROOT_NODE_ID,
 } from "@/components/consts";
 import { loadLocalStorage, saveLocalStorage } from "@/utils/localStorage";
-import useSessionStore, { Session } from "@/store/session-store";
-const selector = (state: any) => ({
+import useSessionStore, { Session, SessionStoreState } from "@/store/session-store";
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   edges: state.edges,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });
 
-const sessionSelector = (state: any) => ({
+const sessionSelector = (state: SessionStoreState) => ({
   currentSessionId: state.currentSessionId,
   setCurrentSessionId: state.setCurrentSessionId,
   sessions: state.sessions,
   setSessions: state.setSessions,
 });
 
-const uiSelector = (state: any) => ({
+const uiSelector = (state: UIStoreState) => ({
   setShowPopoverNotice: state.setShowPopoverNotice,
   setPopoverNoticeMessage: state.setPopoverNoticeMessage,
 });

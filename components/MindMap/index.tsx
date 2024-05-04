@@ -8,14 +8,14 @@ import ReactFlow, {
 } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
 import TextNode from "../Node";
-import useGraphStore from "@/store/graph-store";
-import useUIStore from "@/store/ui-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import EditNodeModal from "../Modal/EditNodeModal";
 const nodeTypes = {
   node: TextNode,
 };
 
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,
@@ -23,11 +23,9 @@ const selector = (state: any) => ({
   onConnect: state.onConnect,
   setNodes: state.setNodes,
   setEdges: state.setEdges,
-  editModalOpen: state.editModalOpen,
-  setEditModalOpen: state.setEditModalOpen,
 });
 
-const uiSelector = (state: any) => ({
+const uiSelector = (state: UIStoreState) => ({
   editModalOpen: state.editModalOpen,
   setEditModalOpen: state.setEditModalOpen,
 });

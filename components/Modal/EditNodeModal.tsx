@@ -1,15 +1,15 @@
 import Modal from ".";
-import useGraphStore from "@/store/graph-store";
-import useUIStore from "@/store/ui-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import { Node } from '@/types/node';
 import { useShallow } from "zustand/react/shallow";
 import { useCallback, useState, useMemo } from "react";
 import useConcepts from "@/hooks/useConcepts";
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   setNodes: state.setNodes,
 });
-const uiSelector = (state: any) => ({
+const uiSelector = (state: UIStoreState) => ({
   editModalNodeId: state.editModalNodeId,
 });
 export default function EditNodeModal({

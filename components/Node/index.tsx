@@ -6,13 +6,13 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
 import { XCircleIcon, MinusIcon } from "@heroicons/react/24/solid";
-import useGraphStore from "../../store/graph-store";
+import useGraphStore, { GraphStoreState } from "../../store/graph-store";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import useUIStore from "@/store/ui-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import useConcepts from "@/hooks/useConcepts";
 import { NodeData } from "@/types/node";
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   setNodeHeight: state.setNodeHeight,
   setNodeContent: state.setNodeContent,
@@ -20,7 +20,7 @@ const selector = (state: any) => ({
   removeNode: state.removeNode,
 });
 
-const uiSelector = (state: any) => ({
+const uiSelector = (state: UIStoreState) => ({
   editModalOpen: state.editModalOpen,
   setEditModalOpen: state.setEditModalOpen,
 });

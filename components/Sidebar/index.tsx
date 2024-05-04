@@ -1,25 +1,26 @@
 import React, { useState, useCallback } from "react";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
-import useUIStore, { Session } from "@/store/ui-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
-import useGraphStore from "@/store/graph-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 import { loadLocalStorage, removeLocalStorage } from "@/utils/localStorage";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+import useSessionStore, { SessionStoreState, Session } from "@/store/session-store";
 
-const uiSelector = (state: any) => ({
+const sessionSelector = (state: SessionStoreState) => ({
   sessions: state.sessions,
   setSessions: state.setSessions,
   currentSessionId: state.currentSessionId,
   setCurrentSessionId: state.setCurrentSessionId,
 });
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   setNodes: state.setNodes,
   setEdges: state.setEdges,
 });
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { sessions, currentSessionId, setCurrentSessionId, setSessions } =
-    useUIStore(useShallow(uiSelector));
+    useSessionStore(useShallow(sessionSelector));
   const { setNodes, setEdges } = useGraphStore(useShallow(selector));
   const loadSession = useCallback((sessionId: string) => {
     const { nodes, edges } = loadLocalStorage(sessionId)!;

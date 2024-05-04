@@ -17,7 +17,7 @@ import { saveLocalStorage } from "@/utils/localStorage";
 import { ROOT_NODE_ID } from "../components/consts";
 import { uuid } from "uuidv4";
 import { treeLayout, customLayout, documentLayout} from "../utils/treeLayout";
-type GraphStoreState = {
+export type GraphStoreState = {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
@@ -27,6 +27,7 @@ type GraphStoreState = {
   setEdges: (edges: Edge[]) => void;
   setNodeContent: (id: string, content: string | ((s: string) => void)) => void;
   addNode: (id: string, concept?: string) => void;
+  removeNode: (targetId: string) => void;
   updateTreeLayout: (nodes: Node[]) => void;
   setNodeHeight: (nodeId: string, height: number) => void;
 };

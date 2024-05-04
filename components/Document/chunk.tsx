@@ -1,4 +1,4 @@
-import useGraphStore from "@/store/graph-store";
+import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { useMemo, useState, useCallback } from "react";
 import { markdown } from "@/utils/markdown";
@@ -7,7 +7,7 @@ import { XCircleIcon } from "@heroicons/react/24/solid";
 import Tool from "../Node/bottomTool";
 import Concepts from "../Node/concepts";
 import useConcepts from "@/hooks/useConcepts";
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   removeNode: state.removeNode,
 });
@@ -38,7 +38,7 @@ export function Chunck({ id }: { id: string }) {
   const onFold = useCallback(() => {
     setFold((f) => !f);
   }, []);
-  const node = useMemo(() => nodes.find((n: Node) => n.id === id), [nodes, id]);
+  const node = useMemo(() => nodes.find((n: Node) => n.id === id)!, [nodes, id]);
   return (
     <div className="w-[32rem] relative">
       <div

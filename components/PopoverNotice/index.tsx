@@ -1,7 +1,7 @@
-import useUIStore from "@/store/ui-store";
+import useUIStore, { UIStoreState } from "@/store/ui-store";
 import React, { useState, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-const uiSelector = (state: any) => ({
+const uiSelector = (state: UIStoreState) => ({
   showPopoverNotice: state.showPopoverNotice,
   setShowPopoverNotice: state.setShowPopoverNotice,
   popoverNoticeMessage: state.popoverNoticeMessage,

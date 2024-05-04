@@ -5,14 +5,14 @@ import {
   CubeIcon
 } from "@heroicons/react/24/outline";
 import { useCallback } from "react";
-import useGraphStore from "../../store/graph-store";
+import useGraphStore, { GraphStoreState } from "../../store/graph-store";
 import { useShallow } from "zustand/react/shallow";
 import { makeRegQuery, readStreamAsString } from "@/utils";
 import { Endpoints } from "@/utils/makeRegQuery";
 // delete node, add node, generate content
 const toolClassName =
   "h-4 w-4 rounded cursor-pointer flex justify-center items-center m-1";
-const selector = (state: any) => ({
+const selector = (state: GraphStoreState) => ({
   setNodeContent: state.setNodeContent,
   addNode: state.addNode,
   removeNode: state.removeNode,
