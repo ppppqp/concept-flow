@@ -7,7 +7,7 @@ import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 import useUIStore, { UIStoreState } from "@/store/ui-store";
 import Document from "@/components/Document";
 import Switch from "@/components/Switch";
-import Sidebar from "@/components/Sidebar";;
+import dynamic from "next/dynamic";
 import { nodesToString } from "@/utils/toString";
 import PopoverNotice from "@/components/PopoverNotice";
 import { useSessionControl } from "@/hooks/useSessionControl";
@@ -19,6 +19,7 @@ enum Mode {
   MindMap,
   Document,
 }
+const Sidebar = dynamic(() => import('@/components/Sidebar'), { ssr: false })
 
 const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,

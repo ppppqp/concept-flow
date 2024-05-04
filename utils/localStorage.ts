@@ -1,3 +1,4 @@
+import { DEFAULT_CONCEPT } from "@/components/consts";
 import { Node, Edge } from "reactflow";
 export function saveLocalStorage(
   sessionId: string,
@@ -5,6 +6,9 @@ export function saveLocalStorage(
   nodes: Node[],
   edges: Edge[]
 ) {
+  if(typeof localStorage === 'undefined'){
+    return;
+  }
   localStorage.setItem(
     `concept-flow%${sessionId}`,
     JSON.stringify({
@@ -19,6 +23,9 @@ export function saveLocalStorage(
 const getKey = (sessionId: string) => `concept-flow%${sessionId}`;
 
 export function loadLocalStorage(sessionId: string) {
+  if(typeof localStorage === 'undefined'){
+    return {concept: DEFAULT_CONCEPT, time: Date.now()};
+  }
   const result = localStorage.getItem(getKey(sessionId));
   try {
     return JSON.parse(result!) as {
@@ -29,10 +36,14 @@ export function loadLocalStorage(sessionId: string) {
     };
   } catch (err) {
     // TODO: error handling
+    console.log(err);
   }
 }
 
 export function loadAllSessionIds() {
+  if(typeof localStorage === 'undefined'){
+    return [];
+  }
   const parsedSessions = [];
   const regexPattern = /^concept-flow%(.+?)$/;
   for (let i = 0; i < localStorage.length; i++) {
@@ -48,5 +59,8 @@ export function loadAllSessionIds() {
 }
 
 export function removeLocalStorage(sessionId: string) {
+  if(typeof localStorage === 'undefined'){
+    return;
+  }
   return localStorage.removeItem(getKey(sessionId));
 }
