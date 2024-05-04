@@ -13,6 +13,9 @@ Then click the <span style="color: #e1a107">yellow spark</span> button to explor
 - Elasticsearch
 `;
 
+export const DEFAULT_CONCEPT = "Trip to New York";
+
+
 export const DEFAULT_NODES = [
   {
     id: ROOT_NODE_ID,
@@ -20,9 +23,10 @@ export const DEFAULT_NODES = [
     position: { x: 0, y: 0 },
     data: {
       content: guide,
-      concept: "Trip to New York",
+      concept: DEFAULT_CONCEPT,
       degree: 0,
       depth: 0,
+      height: 0,
     },
     dragHandle: ".custom-drag-handle",
   },

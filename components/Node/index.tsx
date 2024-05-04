@@ -45,7 +45,6 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
     () => setEditModalOpen(true, id),
     [setEditModalOpen, id]
   );
-  console.log('here:', id);
   const concepts = useConcepts(id, nodes);
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {

@@ -5,7 +5,12 @@ import { useShallow } from "zustand/react/shallow";
 import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 import { loadLocalStorage, removeLocalStorage } from "@/utils/localStorage";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import useSessionStore, { SessionStoreState, Session } from "@/store/session-store";
+import useSessionStore, {
+  SessionStoreState,
+  Session,
+} from "@/store/session-store";
+import { useSessionControl } from "@/hooks/useSessionControl";
+import { uuid } from "uuidv4";
 
 const sessionSelector = (state: SessionStoreState) => ({
   sessions: state.sessions,
@@ -22,12 +27,7 @@ const Sidebar = () => {
   const { sessions, currentSessionId, setCurrentSessionId, setSessions } =
     useSessionStore(useShallow(sessionSelector));
   const { setNodes, setEdges } = useGraphStore(useShallow(selector));
-  const loadSession = useCallback((sessionId: string) => {
-    const { nodes, edges } = loadLocalStorage(sessionId)!;
-    setCurrentSessionId(sessionId);
-    setNodes(nodes);
-    setEdges(edges);
-  }, [setCurrentSessionId, setNodes, setEdges]);
+  const { loadSession, removeSession, addSession } = useSessionControl();
   return (
     <>
       <button className="text-zinc-700 ml-2" onClick={() => setIsOpen(!isOpen)}>
@@ -42,7 +42,12 @@ const Sidebar = () => {
           <button className="text-zinc-700" onClick={() => setIsOpen(!isOpen)}>
             Close
           </button>
-          <div className="hover:bg-zinc-100 rounded py-2 px-4 cursor-pointer flex gap-2 items-center mt-2">+ New Session</div>
+          <div
+            className="hover:bg-zinc-100 rounded py-2 px-4 cursor-pointer flex gap-2 items-center mt-2"
+            onClick={() => addSession(uuid())}
+          >
+            + New Session
+          </div>
           <div className="mt-4">Past Sessions</div>
           <nav className="mt-8">
             {sessions.map((session: Session) => (
@@ -61,14 +66,7 @@ const Sidebar = () => {
                   }
                   onClick={(e) => {
                     e.stopPropagation();
-                    const index = sessions.findIndex(
-                      (s: Session) => s.sessionId === session.sessionId
-                    );
-                    const newSessions = [...sessions];
-                    newSessions.splice(index, 1);
-                    loadSession(newSessions[0]?.sessionId);
-                    setSessions(newSessions);
-                    removeLocalStorage(session.sessionId);
+                    removeSession(session.sessionId);
                   }}
                 />
                 {session.concept}

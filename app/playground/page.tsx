@@ -13,6 +13,8 @@ import PopoverNotice from "@/components/PopoverNotice";
 import { useSessionControl } from "@/hooks/useSessionControl";
 import { uuid } from "uuidv4";
 import useSessionStore, { SessionStoreState } from "@/store/session-store";
+import { loadAllSessionIds } from "@/utils/localStorage";
+import { DEFAULT_EDGES, DEFAULT_NODES } from "@/components/consts";
 enum Mode {
   MindMap,
   Document,
@@ -31,24 +33,28 @@ const uiSelector = (state: UIStoreState) => ({
 });
 
 const sessionSelector = (state: SessionStoreState) => ({
-  sessions: state.sessions,
-  setSessions: state.setSessions,
   currentSessionId: state.currentSessionId,
-  setCurrentSessionId: state.setCurrentSessionId,
 })
+
+const buttonClass = 'w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded';
 
 export default function Playground() {
   const [mode, setMode] = useState(Mode.MindMap);
-  const { setNodes, setEdges, nodes, edges } = useGraphStore(useShallow(selector));
+  const { nodes, edges, setNodes, setEdges} = useGraphStore(useShallow(selector));
   const { setPopoverNoticeMessage, setShowPopoverNotice } = useUIStore(
     useShallow(uiSelector)
   );
-  const {sessions} = useSessionStore(useShallow(sessionSelector));
-  const { addSession } = useSessionControl();
+  const {currentSessionId} = useSessionStore(useShallow(sessionSelector));
+  const { addSession, loadSession, saveSession } = useSessionControl();
   useEffect(() => {
+    const sessions = loadAllSessionIds();
     // init canvas
-    addSession(uuid());
-
+    console.log(sessions);
+    if(sessions.length){
+      loadSession(sessions[0].sessionId);
+    } else{
+      addSession(uuid());
+    }
     // deps array intentially left blank to prevent rerender
   }, []);
   
@@ -56,7 +62,7 @@ export default function Playground() {
     <>
       <PopoverNotice />
       <div className="absolute left-0 flex text-base gap-2 z-40">
-        {/* <Sidebar /> */}
+        <Sidebar />
       </div>
       <div className="absolute text-base right-8 flex gap-2 flex-col z-30">
         <div className="flex gap-2">
@@ -69,18 +75,18 @@ export default function Playground() {
           />
         </div>
         <div
-          className="w-fit px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded"
+          className={buttonClass}
           onClick={() => {
-            
+            saveSession(currentSessionId, nodes, edges)
           }}
         >
           Save to browser
         </div>
-        <div className="w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded">
+        <div className={buttonClass}>
           Export to PDF
         </div>
         <div
-          className="w-fit	 px-2 py-1 bg-zinc-100 hover:bg-zinc-200 cursor-pointer rounded"
+          className={buttonClass}
           onClick={() => {
             navigator.clipboard.writeText(nodesToString(nodes));
             setPopoverNoticeMessage("Copied to clipboard!");
@@ -88,6 +94,15 @@ export default function Playground() {
           }}
         >
           Clipboard
+        </div>
+        <div
+          className={buttonClass}
+          onClick={() => {
+            setNodes(DEFAULT_NODES);
+            setEdges(DEFAULT_EDGES);
+          }}
+        >
+          Clear
         </div>
       </div>
       {mode === Mode.MindMap ? <MindMap /> : <Document />}

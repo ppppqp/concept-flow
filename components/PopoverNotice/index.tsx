@@ -21,7 +21,7 @@ const PopoverNotice = () => {
   if (!showPopoverNotice) return null;
   return (
     <div
-      className={`fixed flex items-end justify-center p-4 z-50 top-4 inset-x-0`}
+      className={`fixed flex items-end justify-center p-4 z-50 top-4 left-1/2 w-8 `}
     >
       <div
         className={`px-4 py-2 mb-4 bg-white border text-zinc-700 rounded-xl shadow-lg`}

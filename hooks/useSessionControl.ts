@@ -2,14 +2,18 @@ import useGraphStore, { GraphStoreState } from "@/store/graph-store";
 import useUIStore, { UIStoreState } from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
 import { useCallback } from "react";
-import { Node } from "@/types/node";
+import { Node, Edge } from "@/types/node";
 import {
+  DEFAULT_CONCEPT,
   DEFAULT_NODES,
   DEFAULT_EDGES,
   ROOT_NODE_ID,
 } from "@/components/consts";
-import { loadLocalStorage, saveLocalStorage } from "@/utils/localStorage";
-import useSessionStore, { Session, SessionStoreState } from "@/store/session-store";
+import { loadLocalStorage, removeLocalStorage, saveLocalStorage } from "@/utils/localStorage";
+import useSessionStore, {
+  Session,
+  SessionStoreState,
+} from "@/store/session-store";
 const selector = (state: GraphStoreState) => ({
   nodes: state.nodes,
   edges: state.edges,
@@ -29,27 +33,56 @@ const uiSelector = (state: UIStoreState) => ({
   setPopoverNoticeMessage: state.setPopoverNoticeMessage,
 });
 export function useSessionControl() {
-  const { nodes, edges, setNodes, setEdges } = useGraphStore(useShallow(selector));
+  const { nodes, edges, setNodes, setEdges } = useGraphStore(
+    useShallow(selector)
+  );
   const { currentSessionId, setCurrentSessionId, sessions, setSessions } =
     useSessionStore(sessionSelector);
   const { setPopoverNoticeMessage, setShowPopoverNotice } = useUIStore(
     useShallow(uiSelector)
   );
+  const saveSession = useCallback(
+    (sessionId: string, nodes: Node[], edges: Edge[]) => {
+      const concept = nodes.find((n: Node) => n.id === ROOT_NODE_ID)?.data
+        .concept!;
+      saveLocalStorage(sessionId, concept, nodes, edges);
+      // update sidebar synchrounously
+      const newSessions = [...sessions];
+
+      const savedSession = newSessions.find((s: Session) => s.sessionId === sessionId);
+      if(savedSession){
+        savedSession.concept = concept;
+        setSessions(newSessions);
+      }
+      setPopoverNoticeMessage("Saved!");
+      setShowPopoverNotice(true);
+      
+    },
+    [setPopoverNoticeMessage, setShowPopoverNotice, sessions, setSessions]
+  );
   const addSession = useCallback(
     (sessionId: string) => {
       const newSessions = [...sessions];
-      const concept = nodes.find((n: Node) => n.id === ROOT_NODE_ID)?.data.concept;
+      const concept = DEFAULT_CONCEPT;
       const newSession = {
         sessionId,
-        concept,
+        concept: DEFAULT_CONCEPT,
       };
       newSessions.unshift(newSession);
       setSessions(newSessions);
       setCurrentSessionId(sessionId);
       setNodes(DEFAULT_NODES);
       setEdges(DEFAULT_EDGES);
+      saveSession(sessionId, DEFAULT_NODES, DEFAULT_EDGES);
     },
-    [sessions, setSessions, setNodes, setEdges, setCurrentSessionId, nodes]
+    [
+      sessions,
+      setSessions,
+      setNodes,
+      setEdges,
+      setCurrentSessionId,
+      saveSession,
+    ]
   );
   const loadSession = useCallback(
     (sessionId: string) => {
@@ -66,41 +99,18 @@ export function useSessionControl() {
       if (sessions.length === 1) {
         return;
       }
+      removeLocalStorage(sessionId);
+
       const newSessions = [...sessions];
       const index = newSessions.findIndex((s) => s.sessionId === sessionId);
       newSessions.splice(index, 1);
       setSessions(newSessions);
-      loadSession(newSessions[0].sessionId);
+      if (currentSessionId === sessionId) {
+        loadSession(newSessions[0].sessionId);
+      }
     },
-    [sessions, setSessions, loadSession]
+    [sessions, setSessions, loadSession, currentSessionId]
   );
-
-  const saveSession = useCallback(() => {
-    const concept = nodes.find((n: Node) => n.id === ROOT_NODE_ID)?.data
-      .concept;
-    saveLocalStorage(currentSessionId, concept, nodes, edges);
-    // update sidebar synchrounously
-    const index = sessions.findIndex(
-      (s: Session) => s.sessionId === currentSessionId
-    );
-    const newSessions = [...sessions];
-    const currentSession = sessions[index];
-    // update concept
-    currentSession.concept = concept;
-    newSessions.splice(index, 1);
-    newSessions.unshift(currentSession);
-    setSessions(newSessions);
-    setPopoverNoticeMessage("Saved!");
-    setShowPopoverNotice(true);
-  }, [
-    currentSessionId,
-    nodes,
-    edges,
-    sessions,
-    setSessions,
-    setPopoverNoticeMessage,
-    setShowPopoverNotice,
-  ]);
 
   return { loadSession, removeSession, addSession, saveSession };
 }
