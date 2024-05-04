@@ -11,11 +11,7 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useUIStore from "@/store/ui-store";
 import useConcepts from "@/hooks/useConcepts";
-export interface NodeData {
-  content: string;
-  concept: string;
-  degree: number;
-}
+import { NodeData } from "@/types/node";
 const selector = (state: any) => ({
   nodes: state.nodes,
   setNodeHeight: state.setNodeHeight,
@@ -49,6 +45,7 @@ export default function TextNode({ data, id }: { data: NodeData; id: string }) {
     () => setEditModalOpen(true, id),
     [setEditModalOpen, id]
   );
+  console.log('here:', id);
   const concepts = useConcepts(id, nodes);
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {

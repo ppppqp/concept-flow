@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import useUIStore, { Session } from "@/store/ui-store";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/store/graph-store";
-import { loadLocalStorage } from "@/utils/localStorage";
+import { loadLocalStorage, removeLocalStorage } from "@/utils/localStorage";
+import { XCircleIcon } from "@heroicons/react/24/solid";
+
 const uiSelector = (state: any) => ({
   sessions: state.sessions,
-  setCurrentSessionId: state.setCurrentSessionId
+  setSessions: state.setSessions,
+  currentSessionId: state.currentSessionId,
+  setCurrentSessionId: state.setCurrentSessionId,
 });
 const selector = (state: any) => ({
   setNodes: state.setNodes,
@@ -14,9 +18,15 @@ const selector = (state: any) => ({
 });
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { sessions, setCurrentSessionId } = useUIStore(useShallow(uiSelector));
+  const { sessions, currentSessionId, setCurrentSessionId, setSessions } =
+    useUIStore(useShallow(uiSelector));
   const { setNodes, setEdges } = useStore(useShallow(selector));
-
+  const loadSession = useCallback((sessionId: string) => {
+    const { nodes, edges } = loadLocalStorage(sessionId)!;
+    setCurrentSessionId(sessionId);
+    setNodes(nodes);
+    setEdges(edges);
+  }, [setCurrentSessionId, setNodes, setEdges]);
   return (
     <>
       <button className="text-zinc-700 ml-2" onClick={() => setIsOpen(!isOpen)}>
@@ -31,20 +41,35 @@ const Sidebar = () => {
           <button className="text-zinc-700" onClick={() => setIsOpen(!isOpen)}>
             Close
           </button>
-
+          <div className="hover:bg-zinc-100 rounded py-2 px-4 cursor-pointer flex gap-2 items-center mt-2">+ New Session</div>
           <div className="mt-4">Past Sessions</div>
           <nav className="mt-8">
             {sessions.map((session: Session) => (
               <div
                 key={session.sessionId}
-                className="hover:bg-zinc-100 rounded py-2 px-4 cursor-pointer"
+                className={`hover:bg-zinc-100 rounded py-2 px-4 cursor-pointer flex gap-2 items-center mt-2 ${
+                  session.sessionId === currentSessionId ? "border" : ""
+                } `}
                 onClick={() => {
-                  const { nodes, edges } = loadLocalStorage(session.sessionId)!;
-                  setCurrentSessionId(session.sessionId);
-                  setNodes(nodes);
-                  setEdges(edges);
+                  loadSession(session.sessionId);
                 }}
               >
+                <XCircleIcon
+                  className={
+                    "h-4 w-4 text-red-600 hover:text-red-500 cursor-pointer"
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const index = sessions.findIndex(
+                      (s: Session) => s.sessionId === session.sessionId
+                    );
+                    const newSessions = [...sessions];
+                    newSessions.splice(index, 1);
+                    loadSession(newSessions[0]?.sessionId);
+                    setSessions(newSessions);
+                    removeLocalStorage(session.sessionId);
+                  }}
+                />
                 {session.concept}
               </div>
             ))}

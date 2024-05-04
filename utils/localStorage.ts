@@ -16,8 +16,10 @@ export function saveLocalStorage(
   );
 }
 
+const getKey = (sessionId: string) => `concept-flow%${sessionId}`;
+
 export function loadLocalStorage(sessionId: string) {
-  const result = localStorage.getItem(`concept-flow%${sessionId}`);
+  const result = localStorage.getItem(getKey(sessionId));
   try {
     return JSON.parse(result!) as {
       nodes: Node[];
@@ -43,4 +45,8 @@ export function loadAllSessionIds() {
     }
   }
   return parsedSessions.sort((a, b) => b.time - a.time);
+}
+
+export function removeLocalStorage(sessionId: string) {
+  return localStorage.removeItem(getKey(sessionId));
 }

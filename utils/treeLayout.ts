@@ -1,6 +1,6 @@
 import { ROOT_NODE_ID } from "@/components/consts";
 import * as d3 from "d3";
-import { Node, Edge } from "reactflow";
+import { Node, Edge } from '@/types/node';
 
 interface FlatNodeData {
   id: string;
