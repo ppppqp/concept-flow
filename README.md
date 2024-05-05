@@ -16,7 +16,7 @@
   <p align="center">
     An LGUI interaction paradigm for systematic information retrieval
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://concept-flow.netlify.app/">View Demo</a>
   </p>
 </div>
 
@@ -42,14 +42,6 @@ There are many products using this paradigm already, like [Albus](https://albus.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
 
 ### Installation
 
