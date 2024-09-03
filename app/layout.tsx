@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google'
+
 import Image from "next/image";
 import "./globals.css";
 import "reactflow/dist/style.css";
@@ -50,6 +52,7 @@ export default function RootLayout({
         </div>
         {children}
       </body>
+      <GoogleAnalytics gaId="G-GE0B8NSJHC"/>
     </html>
   );
 }
